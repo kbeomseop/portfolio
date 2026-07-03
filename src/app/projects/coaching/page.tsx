@@ -9,7 +9,7 @@ const sections: ProjectSection[] = [
     content: (
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Introduction</h2>
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           I coach, run events, and manage social for a bouldering gym in Seoul —
           basically anything that gets people on the wall and keeps them coming back.
         </p>
@@ -22,7 +22,7 @@ const sections: ProjectSection[] = [
     content: (
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Coaching</h2>
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           Of the 19 students in their first month, most stayed on for a second.
         </p>
         <div className="mt-6">
@@ -38,7 +38,7 @@ const sections: ProjectSection[] = [
     content: (
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Curriculum design</h2>
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           Wrote two curricula — a 2–3 month program for beginners and a 3-month program
           for intermediate climbers — each built around adapting to where a student
           actually was, not a one-size-fits-all class. Also built an English version and
@@ -53,7 +53,7 @@ const sections: ProjectSection[] = [
     content: (
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Event design</h2>
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           Ran a bouldering party where members squared off on the same problems, half
           competition, half excuse to hang out longer than usual. Turns out cheering
           someone through a hard move is a pretty good way to make a gym feel like a

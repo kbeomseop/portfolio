@@ -5,7 +5,7 @@ import ProjectLayout, { ProjectSection } from "@/components/ProjectLayout";
 function ScreenshotPlaceholder() {
   return (
     <div
-      className="w-full h-[180px] rounded-[8px] flex items-center justify-center mb-5"
+      className="w-full max-w-[720px] h-[180px] rounded-[8px] flex items-center justify-center mb-5"
       style={{ background: "#f7f7f5", border: "0.5px solid #eee" }}
     >
       <span className="text-[13px] text-[#bbb]">[ screenshot placeholder ]</span>
@@ -20,7 +20,7 @@ const sections: ProjectSection[] = [
     content: (
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Introduction</h2>
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           Work gave me problems worth solving, training gave me a reason to build
           something just for myself, and curiosity did the rest. I didn&apos;t know how
           to code — so I taught myself with AI, one small project at a time.
@@ -35,7 +35,7 @@ const sections: ProjectSection[] = [
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">classnote</h2>
         <ScreenshotPlaceholder />
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           A PWA for managing climbing students — lesson notes, bouldering and endurance
           progress, all in one place. Still in daily use at the gym.
         </p>
@@ -49,7 +49,7 @@ const sections: ProjectSection[] = [
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">climbing-game</h2>
         <ScreenshotPlaceholder />
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           A browser game that reads your hand position through your webcam and turns it
           into a bouldering puzzle — built to make the sport feel more like play, less
           like a wall to be afraid of.
@@ -64,7 +64,7 @@ const sections: ProjectSection[] = [
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">timerforme</h2>
         <ScreenshotPlaceholder />
-        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[480px]">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           An interval timer built for climbing training, because a phone stopwatch was
           never going to cut it.
         </p>

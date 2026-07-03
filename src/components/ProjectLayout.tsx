@@ -52,7 +52,8 @@ export default function ProjectLayout({ categoryLabel, title, sections }: Props)
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
+    <div className="h-screen overflow-hidden bg-white flex justify-center">
+    <div className="w-full max-w-[1100px] flex">
       {/* Sidebar */}
       <aside className="w-[200px] shrink-0 h-full flex flex-col pt-10 pb-8" style={{ borderRight: "0.5px solid #EEEEEE" }}>
         <Link
@@ -95,14 +96,14 @@ export default function ProjectLayout({ categoryLabel, title, sections }: Props)
 
       {/* Content */}
       <main ref={contentRef} className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="px-14 py-12">
+        <div className="px-16 py-12">
           {/* Header */}
           <p className="text-[13px] text-[#999] mb-3">{categoryLabel}</p>
           <h1 className="text-[32px] font-bold leading-[1.3] text-[#1a1a1a]">{title}</h1>
 
           {/* Hero image placeholder */}
           <div
-            className="mt-8 w-full h-[200px] rounded-[8px] flex items-center justify-center"
+            className="mt-8 h-[320px] rounded-[8px] flex items-center justify-center max-w-[720px]"
             style={{ background: "#f7f7f5", border: "0.5px solid #eee" }}
           >
             <span className="text-[13px] text-[#bbb]">[ photo placeholder ]</span>
@@ -120,6 +121,7 @@ export default function ProjectLayout({ categoryLabel, title, sections }: Props)
           <div className="h-16" />
         </div>
       </main>
+    </div>
     </div>
   );
 }

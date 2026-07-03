@@ -47,11 +47,6 @@ export default function Home() {
             </button>
           </li>
           <li>
-            <button className="text-[15px] text-[#555] hover:text-[#D85A30] transition-colors cursor-pointer">
-              Projects
-            </button>
-          </li>
-          <li>
             <button
               onClick={() => setContactOpen((v) => !v)}
               className={`text-[15px] transition-colors cursor-pointer ${

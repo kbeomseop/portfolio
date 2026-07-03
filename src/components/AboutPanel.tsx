@@ -26,14 +26,20 @@ const experience = [
   },
 ];
 
-const subheading = {
+const subheading: React.CSSProperties = {
   fontSize: "14px",
   fontWeight: 600,
   letterSpacing: "0.5px",
-  textTransform: "uppercase" as const,
+  textTransform: "uppercase",
   color: "#FFFFFF",
   marginBottom: "8px",
   display: "block",
+};
+
+const body: React.CSSProperties = {
+  fontSize: "15px",
+  lineHeight: 1.4,
+  color: "rgba(255,255,255,0.75)",
 };
 
 export default function AboutPanel({ open, onClose }: Props) {
@@ -67,28 +73,25 @@ export default function AboutPanel({ open, onClose }: Props) {
       <div className="scrollbar-hide flex-1 overflow-y-auto px-8 py-5 space-y-6">
         {/* Mission */}
         <section>
-          <p className="text-[19px] font-semibold leading-[1.4] text-white">
+          <p className="text-[14px] font-semibold leading-[1.4] text-white whitespace-nowrap">
             Things that make people&apos;s days a little better.
           </p>
-          <p className="mt-3 text-[15px] leading-[1.5] text-white">
+          <p className="mt-3" style={body}>
             I care about the small details — the ones that make a first climb
             less white-knuckle, a caption stop the scroll, a tool just work —
             no duct tape required.
           </p>
-          <p className="mt-2 text-[15px] leading-[1.5] text-white">
+          <p className="mt-2" style={body}>
             I want a beginner hooked after one session, a follower reeled in
             instead of scrolling past, and a teammate with one less thing on
             their plate.
-          </p>
-          <p className="mt-3 text-[13px] italic" style={{ color: "rgba(255,255,255,0.7)" }}>
-            Simple things, made a little better.
           </p>
         </section>
 
         {/* Story ① */}
         <section>
           <h3 style={subheading}>Trained to adapt</h3>
-          <p className="text-[15px] leading-[1.5] text-white">
+          <p style={body}>
             Seven years as an intelligence operator taught me one thing above
             all: figure it out, fast, with whatever you&apos;ve got. No one
             hands you a manual. When I left, that habit didn&apos;t — I just
@@ -100,7 +103,7 @@ export default function AboutPanel({ open, onClose }: Props) {
         {/* Story ② */}
         <section>
           <h3 style={subheading}>Coffee, the slow way</h3>
-          <p className="text-[15px] leading-[1.5] text-white">
+          <p style={body}>
             Five-plus years into home brewing, one pour-over at a time. I hold
             SCA certifications in Barista Skills and Brewing — not because I
             needed the paper, but because I wanted to know I wasn&apos;t just
@@ -117,17 +120,17 @@ export default function AboutPanel({ open, onClose }: Props) {
             {experience.map((item) => (
               <li key={item.period} className="flex gap-5">
                 <span
-                  className="text-[12px] leading-[1.5] whitespace-nowrap pt-[2px] w-24 shrink-0"
-                  style={{ color: "rgba(255,255,255,0.6)" }}
+                  className="text-[12px] whitespace-nowrap pt-[2px] w-24 shrink-0"
+                  style={{ lineHeight: 1.4, color: "rgba(255,255,255,0.55)" }}
                 >
                   {item.period}
                 </span>
                 <div>
                   <p className="text-[14px] font-semibold text-white">{item.org}</p>
-                  <p className="text-[12px] mt-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  <p className="text-[12px] mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>
                     {item.role}
                   </p>
-                  <p className="text-[13px] leading-[1.5] mt-1.5" style={{ color: "rgba(255,255,255,0.8)" }}>
+                  <p className="text-[13px] mt-1.5" style={{ lineHeight: 1.4, color: "rgba(255,255,255,0.75)" }}>
                     {item.desc}
                   </p>
                 </div>

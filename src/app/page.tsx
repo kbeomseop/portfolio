@@ -32,9 +32,14 @@ export default function Home() {
 
       {/* Nav */}
       <nav className="relative z-30 flex items-center justify-between px-16 py-8">
-        <span className="text-[15px] font-semibold tracking-tight text-[#444]">
-          malcolm
-        </span>
+        <div className="flex flex-col" style={{ gap: "3px" }}>
+          <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none">
+            Beomseop Kim
+          </span>
+          <span className="text-[12px] font-normal leading-none" style={{ color: "#999" }}>
+            goes by Malcolm
+          </span>
+        </div>
         <ul className="flex items-center gap-10">
           <li>
             <button

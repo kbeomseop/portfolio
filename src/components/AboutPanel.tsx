@@ -73,7 +73,7 @@ export default function AboutPanel({ open, onClose }: Props) {
       <div className="scrollbar-hide flex-1 overflow-y-auto px-8 py-5 space-y-6">
         {/* Mission */}
         <section>
-          <p className="text-[14px] font-semibold leading-[1.4] text-white whitespace-nowrap">
+          <p className="text-[17px] font-semibold leading-[1.4] text-white">
             Things that make people&apos;s days a little better.
           </p>
           <p className="mt-3" style={body}>

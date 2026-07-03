@@ -16,7 +16,7 @@ const experience = [
     period: "2026 – Now",
     org: "Independent practice",
     role: "Vibe coder",
-    desc: "Building web apps, games, and internal tools with Claude Code.",
+    desc: "Building web apps, games, and internal tools with AI.",
   },
   {
     period: "2018 – 2025",

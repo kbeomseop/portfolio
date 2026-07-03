@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import AboutPanel from "@/components/AboutPanel";
 import ContactPanel from "@/components/ContactPanel";
+import HeroGrid from "@/components/HeroGrid";
 
 export default function Home() {
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -64,46 +65,40 @@ export default function Home() {
         </ul>
       </nav>
 
-      {/* Hero content */}
-      <main className="relative z-10 flex flex-col justify-center px-16 pt-24 pb-32">
-        <h1 className="text-[56px] font-bold leading-[1.2] max-w-2xl">
-          <Link
-            href="/projects/coaching"
-            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
-          >
-            Climbing coach.
-          </Link>
-          <Link
-            href="/projects/content"
-            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
-          >
-            Content creator.
-          </Link>
-          <Link
-            href="/projects/vibe-coder"
-            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
-          >
-            Vibe coder.
-          </Link>
-        </h1>
+      {/* Hero layout: headline left, grid right */}
+      <div className="relative z-10 flex items-center justify-between px-16 pt-16 pb-32">
+        <main className="flex flex-col justify-center">
+          <h1 className="text-[56px] font-bold leading-[1.2] max-w-2xl">
+            <Link
+              href="/projects/coaching"
+              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+            >
+              Climbing coach.
+            </Link>
+            <Link
+              href="/projects/content"
+              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+            >
+              Content creator.
+            </Link>
+            <Link
+              href="/projects/vibe-coder"
+              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+            >
+              Vibe coder.
+            </Link>
+          </h1>
 
-        <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
-          Currently coaching, creating, and coding — mostly in that order.
-        </p>
-      </main>
+          <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
+            Currently coaching, creating, and coding — mostly in that order.
+          </p>
+        </main>
 
-      {/* Projects trigger — bottom-right */}
-      <Link
-        href="/projects/coaching"
-        className="absolute bottom-16 right-16 z-10 flex items-center justify-center hover:opacity-80 transition-opacity"
-        style={{
-          width: 80,
-          height: 80,
-          background: "#D85A30",
-          borderRadius: 12,
-        }}
-        aria-label="View projects"
-      />
+        {/* 3×3 pipe grid */}
+        <div className="shrink-0 pr-8">
+          <HeroGrid />
+        </div>
+      </div>
 
       {/* Side panels */}
       <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />

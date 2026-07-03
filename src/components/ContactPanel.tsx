@@ -34,99 +34,102 @@ const contactLinks = [
 export default function ContactPanel({ open, onClose }: Props) {
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const toggle = (id: string) => setExpanded((prev) => (prev === id ? null : id));
+  const toggle = (id: string) =>
+    setExpanded((prev) => (prev === id ? null : id));
 
   return (
     <aside
-      className="fixed top-0 right-0 h-full w-[420px] z-20 flex flex-col transition-transform duration-300 ease-in-out"
+      className="fixed top-24 right-6 z-20 w-[400px] max-h-[calc(100vh-120px)] flex flex-col transition-transform duration-300 ease-in-out"
       style={{
-        transform: open ? "translateX(0)" : "translateX(100%)",
+        transform: open ? "translateX(0)" : "translateX(calc(100% + 24px))",
         backgroundColor: "#FDFAF7",
-        boxShadow: open ? "-4px 0 40px rgba(0,0,0,0.10)" : "none",
+        borderRadius: "20px",
+        boxShadow: "0 8px 48px rgba(0,0,0,0.12)",
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-10 py-8 border-b border-[#EEEEEE]">
+      <div className="flex items-center justify-between px-8 pt-7 pb-5 shrink-0">
         <button
           onClick={onClose}
-          className="text-[#999] hover:text-[#444] transition-colors text-xl leading-none"
+          className="text-[#bbb] hover:text-[#444] transition-colors text-base leading-none"
           aria-label="Close"
         >
           ✕
         </button>
-        <span className="text-[13px] font-semibold tracking-widest uppercase text-[#999]">
+        <span className="text-[12px] font-semibold tracking-widest uppercase text-[#999]">
           Contact
         </span>
       </div>
 
+      <div className="border-t border-[#EEEEEE] mx-8 shrink-0" />
+
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-10 py-8 space-y-10">
+      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-8">
         {/* Title */}
-        <section>
-          <h2 className="text-[32px] font-semibold leading-[1.3] text-[#444]">
-            Get in touch
-          </h2>
-        </section>
+        <h2 className="text-[28px] font-semibold leading-[1.3] text-[#444]">
+          Get in touch
+        </h2>
 
         {/* Contact links */}
-        <section>
-          <ul className="space-y-5">
-            {contactLinks.map(({ label, value }) => (
-              <li key={label} className="flex flex-col gap-1">
-                <span className="text-[13px] font-semibold tracking-widest uppercase text-[#999]">
-                  {label}
-                </span>
-                <span className="text-[16px] text-[#444]">{value}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <ul className="space-y-5">
+          {contactLinks.map(({ label, value }) => (
+            <li key={label} className="flex flex-col gap-1">
+              <span className="text-[11px] font-semibold tracking-widest uppercase text-[#bbb]">
+                {label}
+              </span>
+              <span className="text-[15px] text-[#444]">{value}</span>
+            </li>
+          ))}
+        </ul>
 
         <div className="border-t border-[#EEEEEE]" />
 
-        {/* Off duty accordion */}
+        {/* Off duty */}
         <section>
-          <h3 className="text-[15px] font-semibold text-[#444] mb-5">
+          <h3 className="text-[14px] font-semibold text-[#444] mb-5">
             A few things I&apos;d rather talk about:
           </h3>
-          <ul className="space-y-2">
-            {offDutyItems.map((item) => {
+
+          <ul>
+            {offDutyItems.map((item, i) => {
               const isOpen = expanded === item.id;
+              const isLast = i === offDutyItems.length - 1;
               return (
-                <li key={item.id} className="border border-[#EEEEEE] rounded-[12px] overflow-hidden">
+                <li key={item.id}>
                   <button
                     onClick={() => toggle(item.id)}
-                    className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-black/[0.02] transition-colors"
+                    className="w-full text-left py-4 hover:opacity-70 transition-opacity"
                   >
-                    <span className="text-[14px] font-semibold text-[#444]">
+                    <p className="text-[14px] font-semibold text-[#444]">
                       {item.title}
-                    </span>
-                    <span
-                      className="text-[#999] text-lg leading-none transition-transform duration-200 shrink-0 ml-3"
-                      style={{ transform: isOpen ? "rotate(45deg)" : "rotate(0deg)" }}
-                    >
-                      +
-                    </span>
+                    </p>
+                    <p className="text-[13px] leading-[1.6] text-[#888] mt-1">
+                      {item.desc}
+                    </p>
                   </button>
 
-                  {/* Accordion body */}
+                  {/* Photo placeholder */}
                   <div
                     className="overflow-hidden transition-all duration-300 ease-in-out"
-                    style={{ maxHeight: isOpen ? "280px" : "0px" }}
+                    style={{ maxHeight: isOpen ? "180px" : "0px" }}
                   >
-                    <div className="px-5 pb-5 space-y-3">
-                      {/* Photo placeholder */}
-                      <div className="w-full h-36 rounded-[8px] bg-[#EEEEEE] flex items-center justify-center">
-                        <span className="text-[13px] text-[#999]">Photo coming soon</span>
+                    <div className="pb-4">
+                      <div className="w-full h-36 rounded-[12px] bg-[#E8E8E8] flex items-center justify-center">
+                        <span className="text-[12px] text-[#aaa]">
+                          Photo coming soon
+                        </span>
                       </div>
-                      <p className="text-[14px] leading-[1.6] text-[#666]">{item.desc}</p>
                     </div>
                   </div>
+
+                  {!isLast && <div className="border-t border-[#EEEEEE]" />}
                 </li>
               );
             })}
           </ul>
         </section>
+
+        <div className="h-2" />
       </div>
     </aside>
   );

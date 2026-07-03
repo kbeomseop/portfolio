@@ -7,11 +7,17 @@ interface Props {
   onClose: () => void;
 }
 
-const offDutyItems = [
+const offDutyItems: { id: string; title: string; desc: React.ReactNode }[] = [
   {
     id: "albums",
     title: "Swapping albums, start to finish",
-    desc: "Your daily listening albums — singles totally count too. K-pop recommendation requests also welcome.",
+    desc: (
+      <>
+        Your daily listening albums — singles totally count too.
+        <br />
+        K-pop recommendation requests also welcome.
+      </>
+    ),
   },
   {
     id: "beta",
@@ -21,7 +27,13 @@ const offDutyItems = [
   {
     id: "route",
     title: "Planning a route to nowhere",
-    desc: "Good routes with no real destination. Bonus points if there's decent coffee at the end.",
+    desc: (
+      <>
+        Good routes with no real destination.
+        <br />
+        Bonus points if there&apos;s decent coffee at the end.
+      </>
+    ),
   },
 ];
 
@@ -108,16 +120,21 @@ export default function ContactPanel({ open, onClose }: Props) {
                     </p>
                   </button>
 
-                  {/* Photo placeholder */}
+                  {/* Photo placeholder — grid-template-rows trick for smooth height animation */}
                   <div
-                    className="overflow-hidden transition-all duration-300 ease-in-out"
-                    style={{ maxHeight: isOpen ? "180px" : "0px" }}
+                    style={{
+                      display: "grid",
+                      gridTemplateRows: isOpen ? "1fr" : "0fr",
+                      transition: "grid-template-rows 0.3s ease",
+                    }}
                   >
-                    <div className="pb-4">
-                      <div className="w-full h-36 rounded-[12px] bg-[#E8E8E8] flex items-center justify-center">
-                        <span className="text-[12px] text-[#aaa]">
-                          Photo coming soon
-                        </span>
+                    <div style={{ overflow: "hidden" }}>
+                      <div className="pb-4">
+                        <div className="w-full h-36 rounded-[12px] bg-[#E8E8E8] flex items-center justify-center">
+                          <span className="text-[12px] text-[#aaa]">
+                            Photo coming soon
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

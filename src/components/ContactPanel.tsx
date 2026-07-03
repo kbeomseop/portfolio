@@ -102,7 +102,7 @@ export default function ContactPanel({ open, onClose }: Props) {
             A few things I&apos;d rather talk about:
           </h3>
 
-          <ul>
+          <ul className="-mx-5">
             {offDutyItems.map((item, i) => {
               const isOpen = expanded === item.id;
               const isLast = i === offDutyItems.length - 1;
@@ -110,7 +110,7 @@ export default function ContactPanel({ open, onClose }: Props) {
                 <li key={item.id}>
                   <button
                     onClick={() => toggle(item.id)}
-                    className="w-full text-left py-4 hover:opacity-70 transition-opacity"
+                    className="w-full text-left py-4 px-5 hover:opacity-70 transition-opacity"
                   >
                     <p className="text-[14px] font-semibold text-[#444]">
                       {item.title}
@@ -129,7 +129,7 @@ export default function ContactPanel({ open, onClose }: Props) {
                     }}
                   >
                     <div style={{ overflow: "hidden" }}>
-                      <div className="pb-4">
+                      <div className="pb-4 px-5">
                         <div className="w-full h-36 rounded-[12px] bg-[#E8E8E8] flex items-center justify-center">
                           <span className="text-[12px] text-[#aaa]">
                             Photo coming soon
@@ -139,7 +139,7 @@ export default function ContactPanel({ open, onClose }: Props) {
                     </div>
                   </div>
 
-                  {!isLast && <div className="border-t border-[#EEEEEE]" />}
+                  {!isLast && <div className="border-t border-[#EEEEEE] mx-5" />}
                 </li>
               );
             })}

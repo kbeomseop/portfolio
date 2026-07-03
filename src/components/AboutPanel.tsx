@@ -26,6 +26,16 @@ const experience = [
   },
 ];
 
+const subheading = {
+  fontSize: "14px",
+  fontWeight: 600,
+  letterSpacing: "0.5px",
+  textTransform: "uppercase" as const,
+  color: "#FFFFFF",
+  marginBottom: "8px",
+  display: "block",
+};
+
 export default function AboutPanel({ open, onClose }: Props) {
   return (
     <aside
@@ -54,38 +64,31 @@ export default function AboutPanel({ open, onClose }: Props) {
       <div className="mx-8 shrink-0" style={{ borderTop: "0.5px solid rgba(255,255,255,0.25)" }} />
 
       {/* Scrollable content */}
-      <div className="scrollbar-hide flex-1 overflow-y-auto px-8 py-6 space-y-8">
+      <div className="scrollbar-hide flex-1 overflow-y-auto px-8 py-5 space-y-6">
         {/* Mission */}
         <section>
           <p className="text-[19px] font-semibold leading-[1.4] text-white">
             Things that make people&apos;s days a little better.
           </p>
-          <p className="mt-4 text-[15px] leading-[1.65] text-white">
+          <p className="mt-3 text-[15px] leading-[1.5] text-white">
             I care about the small details — the ones that make a first climb
             less white-knuckle, a caption stop the scroll, a tool just work —
             no duct tape required.
           </p>
-          <p className="mt-3 text-[15px] leading-[1.65] text-white">
+          <p className="mt-2 text-[15px] leading-[1.5] text-white">
             I want a beginner hooked after one session, a follower reeled in
             instead of scrolling past, and a teammate with one less thing on
             their plate.
           </p>
-          <p className="mt-4 text-[13px] italic" style={{ color: "rgba(255,255,255,0.7)" }}>
+          <p className="mt-3 text-[13px] italic" style={{ color: "rgba(255,255,255,0.7)" }}>
             Simple things, made a little better.
           </p>
         </section>
 
-        <div style={{ borderTop: "0.5px solid rgba(255,255,255,0.25)" }} />
-
         {/* Story ① */}
         <section>
-          <h3
-            className="text-[11px] font-semibold tracking-widest uppercase mb-3"
-            style={{ color: "rgba(255,255,255,0.7)" }}
-          >
-            Trained to adapt
-          </h3>
-          <p className="text-[15px] leading-[1.65] text-white">
+          <h3 style={subheading}>Trained to adapt</h3>
+          <p className="text-[15px] leading-[1.5] text-white">
             Seven years as an intelligence operator taught me one thing above
             all: figure it out, fast, with whatever you&apos;ve got. No one
             hands you a manual. When I left, that habit didn&apos;t — I just
@@ -96,13 +99,8 @@ export default function AboutPanel({ open, onClose }: Props) {
 
         {/* Story ② */}
         <section>
-          <h3
-            className="text-[11px] font-semibold tracking-widest uppercase mb-3"
-            style={{ color: "rgba(255,255,255,0.7)" }}
-          >
-            Coffee, the slow way
-          </h3>
-          <p className="text-[15px] leading-[1.65] text-white">
+          <h3 style={subheading}>Coffee, the slow way</h3>
+          <p className="text-[15px] leading-[1.5] text-white">
             Five-plus years into home brewing, one pour-over at a time. I hold
             SCA certifications in Barista Skills and Brewing — not because I
             needed the paper, but because I wanted to know I wasn&apos;t just
@@ -114,13 +112,8 @@ export default function AboutPanel({ open, onClose }: Props) {
 
         {/* Experience */}
         <section>
-          <h3
-            className="text-[11px] font-semibold tracking-widest uppercase mb-6"
-            style={{ color: "rgba(255,255,255,0.7)" }}
-          >
-            Experience
-          </h3>
-          <ol className="space-y-7">
+          <h3 style={{ ...subheading, marginBottom: "16px" }}>Experience</h3>
+          <ol className="space-y-6">
             {experience.map((item) => (
               <li key={item.period} className="flex gap-5">
                 <span
@@ -134,7 +127,7 @@ export default function AboutPanel({ open, onClose }: Props) {
                   <p className="text-[12px] mt-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>
                     {item.role}
                   </p>
-                  <p className="text-[13px] leading-[1.6] mt-2" style={{ color: "rgba(255,255,255,0.8)" }}>
+                  <p className="text-[13px] leading-[1.5] mt-1.5" style={{ color: "rgba(255,255,255,0.8)" }}>
                     {item.desc}
                   </p>
                 </div>

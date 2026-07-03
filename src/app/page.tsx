@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import AboutPanel from "@/components/AboutPanel";
 import ContactPanel from "@/components/ContactPanel";
 
@@ -87,6 +88,19 @@ export default function Home() {
           </button>
         </div>
       </main>
+
+      {/* Projects trigger — bottom-right */}
+      <Link
+        href="/projects/coaching"
+        className="absolute bottom-16 right-16 z-10 flex items-center justify-center hover:opacity-80 transition-opacity"
+        style={{
+          width: 80,
+          height: 80,
+          background: "#D85A30",
+          borderRadius: 12,
+        }}
+        aria-label="View projects"
+      />
 
       {/* Side panels */}
       <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />

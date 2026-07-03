@@ -1,4 +1,13 @@
+"use client";
+
+import { useState } from "react";
+import AboutPanel from "@/components/AboutPanel";
+import ContactPanel from "@/components/ContactPanel";
+
 export default function Home() {
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
       {/* Grid background */}
@@ -21,26 +30,42 @@ export default function Home() {
       />
 
       {/* Nav */}
-      <nav className="relative z-10 flex items-center justify-between px-16 py-8">
+      <nav className="relative z-30 flex items-center justify-between px-16 py-8">
         <span className="text-[15px] font-semibold tracking-tight text-[#444]">
           malcolm
         </span>
         <ul className="flex items-center gap-10">
-          {["About", "Projects", "Contact"].map((item) => (
-            <li key={item}>
-              <button className="text-[15px] text-[#555] hover:text-[#D85A30] transition-colors cursor-pointer">
-                {item}
-              </button>
-            </li>
-          ))}
+          <li>
+            <button
+              onClick={() => setAboutOpen((v) => !v)}
+              className={`text-[15px] transition-colors cursor-pointer ${
+                aboutOpen ? "text-[#D85A30]" : "text-[#555] hover:text-[#D85A30]"
+              }`}
+            >
+              About
+            </button>
+          </li>
+          <li>
+            <button className="text-[15px] text-[#555] hover:text-[#D85A30] transition-colors cursor-pointer">
+              Projects
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => setContactOpen((v) => !v)}
+              className={`text-[15px] transition-colors cursor-pointer ${
+                contactOpen ? "text-[#D85A30]" : "text-[#555] hover:text-[#D85A30]"
+              }`}
+            >
+              Contact
+            </button>
+          </li>
         </ul>
       </nav>
 
       {/* Hero content */}
       <main className="relative z-10 flex flex-col justify-center px-16 pt-24 pb-32">
-        <h1
-          className="text-[56px] font-bold leading-[1.2] text-[#444] max-w-2xl"
-        >
+        <h1 className="text-[56px] font-bold leading-[1.2] text-[#444] max-w-2xl">
           Climbing coach.
           <br />
           Content creator.
@@ -62,6 +87,10 @@ export default function Home() {
           </button>
         </div>
       </main>
+
+      {/* Side panels */}
+      <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <ContactPanel open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );
 }

@@ -87,7 +87,7 @@ export default function Home() {
           </Link>
         </h1>
 
-        <p className="mt-6 text-[16px] leading-[1.65] text-[#555] max-w-md">
+        <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
           Currently coaching, creating, and coding — mostly in that order.
         </p>
       </main>

@@ -32,9 +32,10 @@ export default function AboutPanel({ open, onClose }: Props) {
       className="fixed top-24 left-6 z-20 w-[440px] max-h-[calc(100vh-120px)] flex flex-col transition-transform duration-300 ease-in-out"
       style={{
         transform: open ? "translateX(0)" : "translateX(calc(-100% - 24px))",
-        backgroundColor: "#FDFAF7",
+        backgroundColor: "#FDF6F0",
+        border: "0.5px solid #F0DFCE",
         borderRadius: "20px",
-        boxShadow: "0 8px 48px rgba(0,0,0,0.12)",
+        boxShadow: "0 12px 30px rgba(0,0,0,0.06)",
       }}
     >
       {/* Header */}

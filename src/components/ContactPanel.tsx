@@ -54,9 +54,10 @@ export default function ContactPanel({ open, onClose }: Props) {
       className="fixed top-24 right-6 z-20 w-[400px] max-h-[calc(100vh-120px)] flex flex-col transition-transform duration-300 ease-in-out"
       style={{
         transform: open ? "translateX(0)" : "translateX(calc(100% + 24px))",
-        backgroundColor: "#FDFAF7",
+        backgroundColor: "#FCEFE9",
+        border: "0.5px solid #F5D9C8",
         borderRadius: "20px",
-        boxShadow: "0 8px 48px rgba(0,0,0,0.12)",
+        boxShadow: "0 12px 30px rgba(0,0,0,0.06)",
       }}
     >
       {/* Header */}

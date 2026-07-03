@@ -54,7 +54,7 @@ export default function AboutPanel({ open, onClose }: Props) {
       <div className="border-t border-[#EEEEEE] mx-8 shrink-0" />
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-8">
+      <div className="scrollbar-hide flex-1 overflow-y-auto px-8 py-6 space-y-8">
         {/* Mission */}
         <section>
           <p className="text-[19px] font-semibold leading-[1.4] text-[#444]">

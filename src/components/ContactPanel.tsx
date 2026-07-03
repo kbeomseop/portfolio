@@ -76,7 +76,7 @@ export default function ContactPanel({ open, onClose }: Props) {
       <div className="border-t border-[#EEEEEE] mx-8 shrink-0" />
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-8">
+      <div className="scrollbar-hide flex-1 overflow-y-auto px-8 py-6 space-y-8">
         {/* Title */}
         <h2 className="text-[28px] font-semibold leading-[1.3] text-[#444]">
           Get in touch

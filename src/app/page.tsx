@@ -66,27 +66,30 @@ export default function Home() {
 
       {/* Hero content */}
       <main className="relative z-10 flex flex-col justify-center px-16 pt-24 pb-32">
-        <h1 className="text-[56px] font-bold leading-[1.2] text-[#444] max-w-2xl">
-          Climbing coach.
-          <br />
-          Content creator.
-          <br />
-          Vibe coder.
+        <h1 className="text-[56px] font-bold leading-[1.2] max-w-2xl">
+          <Link
+            href="/projects/coaching"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+          >
+            Climbing coach.
+          </Link>
+          <Link
+            href="/projects/content"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+          >
+            Content creator.
+          </Link>
+          <Link
+            href="/projects/vibe-coder"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+          >
+            Vibe coder.
+          </Link>
         </h1>
 
         <p className="mt-6 text-[16px] leading-[1.65] text-[#555] max-w-md">
-          I teach climbing, grow our social presence, and build the tools that
-          keep it all running.
+          Currently coaching, creating, and coding — mostly in that order.
         </p>
-
-        <div className="mt-10 flex items-center gap-4">
-          <button className="px-6 py-3 rounded-[8px] bg-[#D85A30] text-white text-[15px] font-semibold hover:bg-[#c04f28] transition-colors">
-            View projects
-          </button>
-          <button className="px-6 py-3 rounded-[8px] border border-[#D85A30] text-[#D85A30] text-[15px] font-semibold hover:bg-[#D85A30]/5 transition-colors">
-            Get in touch
-          </button>
-        </div>
       </main>
 
       {/* Projects trigger — bottom-right */}

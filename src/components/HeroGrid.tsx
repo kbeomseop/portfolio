@@ -137,11 +137,6 @@ export default function HeroGrid() {
   const outerRefs = useRef<(HTMLElement | null)[]>(cells.map(() => null));
   const frozenTransforms = useRef<(string | null)[]>(cells.map(() => null));
 
-  // Bug 2 fix: pause flag checked in exit timer callbacks
-  const isPausedRef = useRef(false);
-  // Tracks which exit chain stage was interrupted by hover, so it can resume on mouse-leave
-  const pendingResumeRef = useRef<("reentering" | "done" | null)[]>(cells.map(() => null));
-
   // Circulation loop — pauses during hover, skips icons in exit/re-entry mode
   useEffect(() => {
     if (phase !== "circulating" || hoveredIndex !== null) return;
@@ -159,44 +154,31 @@ export default function HeroGrid() {
   }, [phase, hoveredIndex]);
 
   // Exit → re-entry timer chain (starts after arrival transition completes)
+  // Exit chains run to completion independent of hover state — no pause/resume needed here.
   useEffect(() => {
     if (phase !== "circulating") return;
     states.forEach(({ posIdx }, i) => {
-      // Also guard against hover: don't start chain while paused
-      if (posIdx === 8 && !exitStartedRef.current[i] && !isPausedRef.current) {
+      if (posIdx === 8 && !exitStartedRef.current[i]) {
         exitStartedRef.current[i] = true;
         inSpecialModeRef.current[i] = true;
 
         // Wait for 8→9 CSS transition (1500ms) + 100ms buffer, then exit
         exitTimersRef.current[i] = setTimeout(() => {
-          // If hover started while waiting, cancel chain and reset so it restarts after hover ends
-          if (isPausedRef.current) {
-            inSpecialModeRef.current[i] = false;
-            exitStartedRef.current[i] = false;
-            exitTimersRef.current[i] = null;
-            return;
-          }
           setExitStates((prev) => { const n = [...prev]; n[i] = "exiting"; return n; });
 
-          // After exit animation completes, teleport outer → SNAKE[0], start re-entry
+          // After exit animation, find the one free slot (0–8) and teleport there
           exitTimersRef.current[i] = setTimeout(() => {
-            // If hovered while exit animation was playing, defer the re-entry transition
-            if (isPausedRef.current) {
-              pendingResumeRef.current[i] = "reentering";
-              exitTimersRef.current[i] = null;
-              return;
-            }
-            setStates((prev) => { const n = [...prev]; n[i] = { posIdx: 0, instant: true }; return n; });
+            setStates((prev) => {
+              const taken = new Set(prev.map((s, j) => (j !== i ? s.posIdx : -1)));
+              const freeSlot = ([0,1,2,3,4,5,6,7,8] as const).find((p) => !taken.has(p)) ?? 0;
+              const n = [...prev];
+              n[i] = { posIdx: freeSlot, instant: true };
+              return n;
+            });
             setExitStates((prev) => { const n = [...prev]; n[i] = "reentering"; return n; });
 
             // After re-entry animation completes, resume normal circulation
             exitTimersRef.current[i] = setTimeout(() => {
-              // If still hovered when re-entry finishes, defer the idle reset
-              if (isPausedRef.current) {
-                pendingResumeRef.current[i] = "done";
-                exitTimersRef.current[i] = null;
-                return;
-              }
               setExitStates((prev) => { const n = [...prev]; n[i] = "idle"; return n; });
               inSpecialModeRef.current[i] = false;
               exitStartedRef.current[i] = false;
@@ -279,11 +261,11 @@ export default function HeroGrid() {
           const exitState = exitStates[i];
           if (exitState === "exiting") {
             innerClass = "icon-exit";
-            // Pause CSS keyframe mid-frame on hover; resume from same frame on leave
-            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
+            // Exit chains play through regardless of hover state — JS timers and CSS stay in sync
+            innerStyle = { animationPlayState: "running" };
           } else if (exitState === "reentering") {
             innerClass = "icon-reenter";
-            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
+            innerStyle = { animationPlayState: "running" };
           } else {
             // idle: apply hover scale
             innerStyle = {
@@ -297,7 +279,6 @@ export default function HeroGrid() {
           phase === "circulating"
             ? {
                 onMouseEnter: () => {
-                  isPausedRef.current = true;
                   // Capture each icon's actual rendered transform (mid-transition position)
                   outerRefs.current.forEach((el, idx) => {
                     if (el) frozenTransforms.current[idx] = getComputedStyle(el).transform;
@@ -305,32 +286,10 @@ export default function HeroGrid() {
                   setHoveredIndex(i);
                 },
                 onMouseLeave: () => {
-                  isPausedRef.current = false;
                   // Clear frozen positions — next render uses target grid position with transition
                   frozenTransforms.current = cells.map(() => null);
                   setHoveredIndex(null);
-                  // Resume any exit chain stages that were interrupted by hover
-                  cells.forEach((_, idx) => {
-                    const pending = pendingResumeRef.current[idx];
-                    if (!pending) return;
-                    pendingResumeRef.current[idx] = null;
-                    if (pending === "reentering") {
-                      setStates((prev) => { const n = [...prev]; n[idx] = { posIdx: 0, instant: true }; return n; });
-                      setExitStates((prev) => { const n = [...prev]; n[idx] = "reentering"; return n; });
-                      exitTimersRef.current[idx] = setTimeout(() => {
-                        setExitStates((prev) => { const n = [...prev]; n[idx] = "idle"; return n; });
-                        inSpecialModeRef.current[idx] = false;
-                        exitStartedRef.current[idx] = false;
-                        exitTimersRef.current[idx] = null;
-                      }, REENTRY_DURATION);
-                    } else if (pending === "done") {
-                      setExitStates((prev) => { const n = [...prev]; n[idx] = "idle"; return n; });
-                      inSpecialModeRef.current[idx] = false;
-                      exitStartedRef.current[idx] = false;
-                      exitTimersRef.current[idx] = null;
-                    }
-                  });
-                  // Shallow-copy states to re-trigger exit chain effect for any paused icons at pos 8
+                  // Shallow-copy to re-trigger exit chain effect for any icons at pos 8
                   setStates((prev) => [...prev]);
                 },
               }

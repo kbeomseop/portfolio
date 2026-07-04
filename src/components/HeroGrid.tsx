@@ -107,6 +107,7 @@ function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: bo
 export default function HeroGrid() {
   const [phase, setPhase] = useState<"entering" | "circulating">("entering");
   const [visibleCount, setVisibleCount] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [states, setStates] = useState<IconState[]>(
     () => cells.map((_, i) => ({ posIdx: i, instant: false }))
   );
@@ -132,9 +133,9 @@ export default function HeroGrid() {
   const inSpecialModeRef = useRef<boolean[]>(cells.map(() => false));
   const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
 
-  // Circulation loop — skips icons in exit/re-entry mode
+  // Circulation loop — pauses during hover, skips icons in exit/re-entry mode
   useEffect(() => {
-    if (phase !== "circulating") return;
+    if (phase !== "circulating" || hoveredIndex !== null) return;
     const id = setInterval(() => {
       setStates((prev) =>
         prev.map(({ posIdx }, i) => {
@@ -144,7 +145,7 @@ export default function HeroGrid() {
       );
     }, 1500);
     return () => clearInterval(id);
-  }, [phase]);
+  }, [phase, hoveredIndex]);
 
   // Exit → re-entry timer chain (starts after arrival transition completes)
   useEffect(() => {
@@ -200,22 +201,34 @@ export default function HeroGrid() {
         />
       </svg>
 
-      {/* Icons — outer div: positioning only, inner div: visual effects */}
+      {/* Icons — outer div: positioning + hover dim, inner div: visual effects */}
       {cells.map((cell, i) => {
         const { posIdx, instant } = states[i];
         const { row, col } = SNAKE[posIdx];
+        const isHoverActive = hoveredIndex !== null;
+        const isHovered = hoveredIndex === i;
 
-        // Outer: circulation positioning only
+        // Outer: circulation positioning + hover blur/opacity
+        const outerTransition =
+          phase === "entering" ? "none"
+          : instant ? "filter 0.2s, opacity 0.2s"
+          : "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s";
+
         const outerStyle: React.CSSProperties = {
           position: "absolute",
           left: OFFSET,
           top: OFFSET,
           transform: `translate(${col * STEP}px, ${row * STEP}px)`,
-          transition: phase === "entering" ? "none" : (instant ? "none" : "transform 1.5s ease-in-out"),
+          transition: outerTransition,
           willChange: "transform",
+          ...(isHoverActive && !isHovered && {
+            filter: "blur(3px)",
+            opacity: 0.5,
+          }),
+          cursor: cell.type === "project" ? "pointer" : "default",
         };
 
-        // Inner: entry fade-in / exit fall-out (no positional side-effects)
+        // Inner: entry fade-in / exit fall-out / hover scale
         let innerStyle: React.CSSProperties = {};
         let innerClass = "";
 
@@ -232,8 +245,22 @@ export default function HeroGrid() {
             innerClass = "icon-exit";
           } else if (exitState === "reentering") {
             innerClass = "icon-reenter";
+          } else {
+            // idle: apply hover scale
+            innerStyle = {
+              transform: isHovered ? "scale(1.1)" : "scale(1)",
+              transition: "transform 0.2s ease-out",
+            };
           }
         }
+
+        const hoverHandlers =
+          phase === "circulating"
+            ? {
+                onMouseEnter: () => setHoveredIndex(i),
+                onMouseLeave: () => setHoveredIndex(null),
+              }
+            : {};
 
         const inner = (
           <div style={innerStyle} className={innerClass || undefined}>
@@ -243,14 +270,14 @@ export default function HeroGrid() {
 
         if (cell.type === "project" && cell.href) {
           return (
-            <Link key={i} href={cell.href} className="hover:opacity-75" style={outerStyle}>
+            <Link key={i} href={cell.href} style={outerStyle} {...hoverHandlers}>
               {inner}
             </Link>
           );
         }
 
         return (
-          <div key={i} data-toy={cell.dataToy} style={outerStyle}>
+          <div key={i} data-toy={cell.dataToy} style={outerStyle} {...hoverHandlers}>
             {inner}
           </div>
         );

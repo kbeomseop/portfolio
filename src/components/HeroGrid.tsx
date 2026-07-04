@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  Mountain, Camera, Code,
-  Wrench, Keyboard, Zap, Settings, Volume2, MousePointer,
+  Mountain, Code,
+  Wrench, Settings, Volume2, MousePointer,
   type LucideIcon,
 } from "lucide-react";
 
@@ -52,22 +52,23 @@ const trackPath = [
 
 interface CellDef {
   type: "project" | "toy";
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  iconSrc?: string;
   href?: string;
   dataToy?: string;
 }
 
 // Ordered by SNAKE path so cells[i] starts at SNAKE[i]
 const cells: CellDef[] = [
-  { type: "project", icon: Mountain,     href: "/projects/coaching" },    // SNAKE[0] (0,0)
-  { type: "toy",     icon: Wrench,       dataToy: "wrench" },             // SNAKE[1] (0,1)
-  { type: "project", icon: Camera,       href: "/projects/content" },     // SNAKE[2] (0,2)
-  { type: "toy",     icon: Settings,     dataToy: "settings" },           // SNAKE[3] (1,2)
-  { type: "toy",     icon: Zap,          dataToy: "zap" },                // SNAKE[4] (1,1)
-  { type: "toy",     icon: Keyboard,     dataToy: "keyboard" },           // SNAKE[5] (1,0)
-  { type: "project", icon: Code,         href: "/projects/vibe-coder" },  // SNAKE[6] (2,0)
-  { type: "toy",     icon: Volume2,      dataToy: "volume2" },            // SNAKE[7] (2,1)
-  { type: "toy",     icon: MousePointer, dataToy: "mousepointer" },       // SNAKE[8] (2,2)
+  { type: "project", icon: Mountain,      href: "/projects/coaching" },             // SNAKE[0] (0,0)
+  { type: "toy",     icon: Wrench,        dataToy: "wrench" },                      // SNAKE[1] (0,1)
+  { type: "project", iconSrc: "/icons/icon-sns.png",         href: "/projects/content" },  // SNAKE[2] (0,2)
+  { type: "toy",     icon: Settings,      dataToy: "settings" },                   // SNAKE[3] (1,2)
+  { type: "toy",     iconSrc: "/icons/icon-motorcycle.png",  dataToy: "motorcycle" },      // SNAKE[4] (1,1)
+  { type: "toy",     iconSrc: "/icons/icon-keycap.png",      dataToy: "keycap" },          // SNAKE[5] (1,0)
+  { type: "project", icon: Code,          href: "/projects/vibe-coder" },           // SNAKE[6] (2,0)
+  { type: "toy",     icon: Volume2,       dataToy: "volume2" },                     // SNAKE[7] (2,1)
+  { type: "toy",     icon: MousePointer,  dataToy: "mousepointer" },                // SNAKE[8] (2,2)
 ];
 
 const ENTRY_STAGGER = 150;
@@ -87,7 +88,15 @@ interface IconState {
   prevPosIdx: number; // previous tick's posIdx — detects 8→0 wrap-around
 }
 
-function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: boolean }) {
+function IconCircle({
+  icon: Icon,
+  iconSrc,
+  isProject,
+}: {
+  icon?: LucideIcon;
+  iconSrc?: string;
+  isProject: boolean;
+}) {
   return (
     <div
       className="flex items-center justify-center"
@@ -100,7 +109,12 @@ function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: bo
         boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
       }}
     >
-      <Icon size={34} color={isProject ? "#D85A30" : "#ccc"} strokeWidth={1.5} />
+      {iconSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={iconSrc} width={46} height={46} alt="" style={{ objectFit: "contain" }} />
+      ) : Icon ? (
+        <Icon size={34} color={isProject ? "#D85A30" : "#ccc"} strokeWidth={1.5} />
+      ) : null}
     </div>
   );
 }
@@ -330,7 +344,7 @@ export default function HeroGrid() {
 
         const inner = (
           <div style={innerStyle}>
-            <IconCircle icon={cell.icon} isProject={cell.type === "project"} />
+            <IconCircle icon={cell.icon} iconSrc={cell.iconSrc} isProject={cell.type === "project"} />
           </div>
         );
 

@@ -267,7 +267,7 @@ export default function HeroGrid() {
           transition: outerTransition,
           willChange: "transform",
           // Dim non-hovered non-animating icons while any icon is hovered
-          ...(isHoverActive && !isHovered && !anim.active && {
+          ...(isHoverActive && !isHovered && {
             filter: "blur(3px)",
             opacity: 0.5,
           }),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Mountain, Camera, Code,
@@ -70,8 +70,12 @@ const cells: CellDef[] = [
   { type: "toy",     icon: MousePointer, dataToy: "mousepointer" },       // SNAKE[8] (2,2)
 ];
 
-const ENTRY_STAGGER = 150; // ms between each icon appearing
-const ENTRY_DURATION = 400; // ms for the fade+slide animation
+const ENTRY_STAGGER = 150;
+const ENTRY_DURATION = 400;
+const EXIT_WAIT = 500;    // ms after reaching SNAKE[8] before exit starts
+const EXIT_DURATION = 400; // ms for exit animation
+
+type ExitState = "idle" | "exiting" | "exited";
 
 interface IconState {
   posIdx: number;
@@ -132,6 +136,40 @@ export default function HeroGrid() {
     return () => clearInterval(id);
   }, [phase]);
 
+  // Exit animation — fires when any icon reaches SNAKE[8]
+  const [exitStates, setExitStates] = useState<ExitState[]>(() => cells.map(() => "idle"));
+  const exitStartedRef = useRef<boolean[]>(cells.map(() => false));
+  const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
+
+  useEffect(() => {
+    if (phase !== "circulating") return;
+    states.forEach(({ posIdx }, i) => {
+      if (posIdx === 8 && !exitStartedRef.current[i]) {
+        exitStartedRef.current[i] = true;
+        exitTimersRef.current[i] = setTimeout(() => {
+          setExitStates((prev) => {
+            const next = [...prev];
+            next[i] = "exiting";
+            return next;
+          });
+          exitTimersRef.current[i] = setTimeout(() => {
+            setExitStates((prev) => {
+              const next = [...prev];
+              next[i] = "exited";
+              return next;
+            });
+            exitTimersRef.current[i] = null;
+          }, EXIT_DURATION);
+        }, EXIT_WAIT);
+      }
+    });
+  }, [states, phase]);
+
+  useEffect(() => {
+    const timers = exitTimersRef.current;
+    return () => timers.forEach((t) => t && clearTimeout(t));
+  }, []);
+
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
       {/* Pipe track */}
@@ -166,9 +204,20 @@ export default function HeroGrid() {
           ty = row * STEP + (shown ? 0 : -60);
           transition = "opacity 0.4s ease-out, transform 0.4s ease-out";
         } else {
-          opacity = 1;
-          ty = row * STEP;
-          transition = instant ? "none" : "transform 1.5s ease-in-out";
+          const exitState = exitStates[i];
+          if (exitState === "exiting") {
+            opacity = 0;
+            ty = row * STEP + 60;
+            transition = "opacity 0.4s ease-in, transform 0.4s ease-in";
+          } else if (exitState === "exited") {
+            opacity = 0;
+            ty = row * STEP + 60;
+            transition = "none";
+          } else {
+            opacity = 1;
+            ty = row * STEP;
+            transition = instant ? "none" : "transform 1.5s ease-in-out";
+          }
         }
 
         const baseStyle: React.CSSProperties = {

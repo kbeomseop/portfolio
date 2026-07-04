@@ -133,6 +133,13 @@ export default function HeroGrid() {
   const inSpecialModeRef = useRef<boolean[]>(cells.map(() => false));
   const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
 
+  // Bug 1 fix: DOM refs + frozen computed transforms for hover freeze-in-place
+  const outerRefs = useRef<(HTMLElement | null)[]>(cells.map(() => null));
+  const frozenTransforms = useRef<(string | null)[]>(cells.map(() => null));
+
+  // Bug 2 fix: pause flag checked in exit timer callbacks
+  const isPausedRef = useRef(false);
+
   // Circulation loop — pauses during hover, skips icons in exit/re-entry mode
   useEffect(() => {
     if (phase !== "circulating" || hoveredIndex !== null) return;
@@ -151,12 +158,20 @@ export default function HeroGrid() {
   useEffect(() => {
     if (phase !== "circulating") return;
     states.forEach(({ posIdx }, i) => {
-      if (posIdx === 8 && !exitStartedRef.current[i]) {
+      // Also guard against hover: don't start chain while paused
+      if (posIdx === 8 && !exitStartedRef.current[i] && !isPausedRef.current) {
         exitStartedRef.current[i] = true;
         inSpecialModeRef.current[i] = true;
 
         // Wait for 8→9 CSS transition (1500ms) + 100ms buffer, then exit
         exitTimersRef.current[i] = setTimeout(() => {
+          // If hover started while waiting, cancel chain and reset so it restarts after hover ends
+          if (isPausedRef.current) {
+            inSpecialModeRef.current[i] = false;
+            exitStartedRef.current[i] = false;
+            exitTimersRef.current[i] = null;
+            return;
+          }
           setExitStates((prev) => { const n = [...prev]; n[i] = "exiting"; return n; });
 
           // After exit animation completes, teleport outer → SNAKE[0], start re-entry
@@ -207,10 +222,13 @@ export default function HeroGrid() {
         const { row, col } = SNAKE[posIdx];
         const isHoverActive = hoveredIndex !== null;
         const isHovered = hoveredIndex === i;
+        const frozen = frozenTransforms.current[i];
 
         // Outer: circulation positioning + hover blur/opacity
+        // When frozen, omit transform transition so icon stays at the captured mid-animation position
         const outerTransition =
           phase === "entering" ? "none"
+          : frozen ? "filter 0.2s, opacity 0.2s"
           : instant ? "filter 0.2s, opacity 0.2s"
           : "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s";
 
@@ -218,7 +236,8 @@ export default function HeroGrid() {
           position: "absolute",
           left: OFFSET,
           top: OFFSET,
-          transform: `translate(${col * STEP}px, ${row * STEP}px)`,
+          // Use frozen computed transform while hovered; fall back to target grid position
+          transform: frozen ?? `translate(${col * STEP}px, ${row * STEP}px)`,
           transition: outerTransition,
           willChange: "transform",
           // Icons in exit/re-entry are exempt from hover dim so animation remains visible
@@ -259,16 +278,20 @@ export default function HeroGrid() {
           phase === "circulating"
             ? {
                 onMouseEnter: () => {
-                  // Snap all icons to their grid positions by removing transform transition,
-                  // stopping any in-flight CSS transition immediately.
-                  setStates((prev) => prev.map((s) => ({ ...s, instant: true })));
+                  isPausedRef.current = true;
+                  // Capture each icon's actual rendered transform (mid-transition position)
+                  outerRefs.current.forEach((el, idx) => {
+                    if (el) frozenTransforms.current[idx] = getComputedStyle(el).transform;
+                  });
                   setHoveredIndex(i);
                 },
                 onMouseLeave: () => {
-                  // Re-enable transform transitions for future moves (no visual jump since
-                  // icons are already at their target positions after the snap).
-                  setStates((prev) => prev.map((s) => ({ ...s, instant: false })));
+                  isPausedRef.current = false;
+                  // Clear frozen positions — next render uses target grid position with transition
+                  frozenTransforms.current = cells.map(() => null);
                   setHoveredIndex(null);
+                  // Shallow-copy states to re-trigger exit chain effect for any paused icons at pos 8
+                  setStates((prev) => [...prev]);
                 },
               }
             : {};
@@ -282,14 +305,26 @@ export default function HeroGrid() {
 
         if (cell.type === "project" && cell.href) {
           return (
-            <Link key={i} href={cell.href} style={outerStyle} {...hoverHandlers}>
+            <Link
+              key={i}
+              href={cell.href}
+              style={outerStyle}
+              {...hoverHandlers}
+              ref={(el) => { outerRefs.current[i] = el; }}
+            >
               {inner}
             </Link>
           );
         }
 
         return (
-          <div key={i} data-toy={cell.dataToy} style={outerStyle} {...hoverHandlers}>
+          <div
+            key={i}
+            data-toy={cell.dataToy}
+            style={outerStyle}
+            {...hoverHandlers}
+            ref={(el) => { outerRefs.current[i] = el; }}
+          >
             {inner}
           </div>
         );

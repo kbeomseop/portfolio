@@ -70,6 +70,9 @@ const cells: CellDef[] = [
   { type: "toy",     icon: MousePointer, dataToy: "mousepointer" },       // SNAKE[8] (2,2)
 ];
 
+const ENTRY_STAGGER = 150; // ms between each icon appearing
+const ENTRY_DURATION = 400; // ms for the fade+slide animation
+
 interface IconState {
   posIdx: number;
   instant: boolean; // suppress transition on wrap-around
@@ -94,21 +97,40 @@ function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: bo
 }
 
 export default function HeroGrid() {
+  const [phase, setPhase] = useState<"entering" | "circulating">("entering");
+  const [visibleCount, setVisibleCount] = useState(0);
   const [states, setStates] = useState<IconState[]>(
     () => cells.map((_, i) => ({ posIdx: i, instant: false }))
   );
 
+  // Entry animation: reveal icons one by one, then switch to circulation
   useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    for (let i = 0; i < cells.length; i++) {
+      timers.push(setTimeout(() => setVisibleCount(i + 1), i * ENTRY_STAGGER));
+    }
+
+    // Start circulation after the last icon's animation completes
+    const total = (cells.length - 1) * ENTRY_STAGGER + ENTRY_DURATION;
+    timers.push(setTimeout(() => setPhase("circulating"), total));
+
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  // Circulation loop — only active after entry is done
+  useEffect(() => {
+    if (phase !== "circulating") return;
     const id = setInterval(() => {
       setStates((prev) =>
         prev.map(({ posIdx }) => ({
           posIdx: (posIdx + 1) % 9,
-          instant: posIdx === 8, // wrap: teleport without transition
+          instant: posIdx === 8,
         }))
       );
     }, 1500);
     return () => clearInterval(id);
-  }, []);
+  }, [phase]);
 
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
@@ -129,17 +151,33 @@ export default function HeroGrid() {
         />
       </svg>
 
-      {/* Animated icons */}
+      {/* Icons */}
       {cells.map((cell, i) => {
         const { posIdx, instant } = states[i];
         const { row, col } = SNAKE[posIdx];
+
+        let opacity: number;
+        let ty: number;
+        let transition: string;
+
+        if (phase === "entering") {
+          const shown = i < visibleCount;
+          opacity = shown ? 1 : 0;
+          ty = row * STEP + (shown ? 0 : -20);
+          transition = "opacity 0.4s ease, transform 0.4s ease";
+        } else {
+          opacity = 1;
+          ty = row * STEP;
+          transition = instant ? "none" : "transform 1.5s ease-in-out";
+        }
 
         const baseStyle: React.CSSProperties = {
           position: "absolute",
           left: OFFSET,
           top: OFFSET,
-          transform: `translate(${col * STEP}px, ${row * STEP}px)`,
-          transition: instant ? "none" : "transform 1.5s ease-in-out",
+          opacity,
+          transform: `translate(${col * STEP}px, ${ty}px)`,
+          transition,
           willChange: "transform",
         };
 

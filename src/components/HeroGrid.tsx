@@ -111,7 +111,7 @@ function IconCircle({
     >
       {iconSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={iconSrc} width={46} height={46} alt="" style={{ objectFit: "contain" }} />
+        <img src={iconSrc} width={78} height={78} alt="" style={{ objectFit: "contain" }} />
       ) : Icon ? (
         <Icon size={34} color={isProject ? "#D85A30" : "#ccc"} strokeWidth={1.5} />
       ) : null}

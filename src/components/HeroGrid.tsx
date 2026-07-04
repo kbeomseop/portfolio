@@ -189,58 +189,58 @@ export default function HeroGrid() {
         />
       </svg>
 
-      {/* Icons */}
+      {/* Icons — outer div: positioning only, inner div: visual effects */}
       {cells.map((cell, i) => {
         const { posIdx, instant } = states[i];
         const { row, col } = SNAKE[posIdx];
 
-        let opacity: number;
-        let ty: number;
-        let transition: string;
-
-        if (phase === "entering") {
-          const shown = i < visibleCount;
-          opacity = shown ? 1 : 0;
-          ty = row * STEP + (shown ? 0 : -60);
-          transition = "opacity 0.4s ease-out, transform 0.4s ease-out";
-        } else {
-          const exitState = exitStates[i];
-          if (exitState === "exiting") {
-            opacity = 0;
-            ty = row * STEP + 60;
-            transition = "opacity 0.4s ease-in, transform 0.4s ease-in";
-          } else if (exitState === "exited") {
-            opacity = 0;
-            ty = row * STEP + 60;
-            transition = "none";
-          } else {
-            opacity = 1;
-            ty = row * STEP;
-            transition = instant ? "none" : "transform 1.5s ease-in-out";
-          }
-        }
-
-        const baseStyle: React.CSSProperties = {
+        // Outer: circulation positioning only
+        const outerStyle: React.CSSProperties = {
           position: "absolute",
           left: OFFSET,
           top: OFFSET,
-          opacity,
-          transform: `translate(${col * STEP}px, ${ty}px)`,
-          transition,
+          transform: `translate(${col * STEP}px, ${row * STEP}px)`,
+          transition: phase === "entering" ? "none" : (instant ? "none" : "transform 1.5s ease-in-out"),
           willChange: "transform",
         };
 
+        // Inner: entry fade-in / exit fall-out (no positional side-effects)
+        let innerStyle: React.CSSProperties = {};
+        let innerClass = "";
+
+        if (phase === "entering") {
+          const shown = i < visibleCount;
+          innerStyle = {
+            opacity: shown ? 1 : 0,
+            transform: `translateY(${shown ? 0 : -60}px)`,
+            transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
+          };
+        } else {
+          const exitState = exitStates[i];
+          if (exitState === "exiting") {
+            innerClass = "icon-exit";
+          } else if (exitState === "exited") {
+            innerStyle = { opacity: 0, transform: "translateY(120px)" };
+          }
+        }
+
+        const inner = (
+          <div style={innerStyle} className={innerClass || undefined}>
+            <IconCircle icon={cell.icon} isProject={cell.type === "project"} />
+          </div>
+        );
+
         if (cell.type === "project" && cell.href) {
           return (
-            <Link key={i} href={cell.href} className="hover:opacity-75" style={baseStyle}>
-              <IconCircle icon={cell.icon} isProject />
+            <Link key={i} href={cell.href} className="hover:opacity-75" style={outerStyle}>
+              {inner}
             </Link>
           );
         }
 
         return (
-          <div key={i} data-toy={cell.dataToy} style={baseStyle}>
-            <IconCircle icon={cell.icon} isProject={false} />
+          <div key={i} data-toy={cell.dataToy} style={outerStyle}>
+            {inner}
           </div>
         );
       })}

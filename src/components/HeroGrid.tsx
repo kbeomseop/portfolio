@@ -7,14 +7,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-const CELL = 80;
-const GAP = 60;
-const STEP = CELL + GAP;       // 140
-const GRID = 2 * STEP + CELL;  // 360
-const R = 20;                  // pipe bend radius
-const PIPE = 30;               // entry/exit pipe length
-const CIRCLE = 70;             // icon circle diameter
-const OFFSET = (CELL - CIRCLE) / 2; // 5px — centers circle in cell
+const CELL = 104;
+const GAP = 78;
+const STEP = CELL + GAP;       // 182
+const GRID = 2 * STEP + CELL;  // 468
+const R = 26;                  // pipe bend radius
+const PIPE = 36;               // entry/exit pipe length
+const CIRCLE = 92;             // icon circle diameter
+const OFFSET = (CELL - CIRCLE) / 2; // 6px — centers circle in cell
 
 // Cell center helpers
 const cx = (col: number) => col * STEP + CELL / 2;
@@ -72,7 +72,7 @@ function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: bo
         boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
       }}
     >
-      <Icon size={26} color={isProject ? "#D85A30" : "#ccc"} strokeWidth={1.5} />
+      <Icon size={34} color={isProject ? "#D85A30" : "#ccc"} strokeWidth={1.5} />
     </div>
   );
 }

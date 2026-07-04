@@ -65,39 +65,43 @@ export default function Home() {
         </ul>
       </nav>
 
-      {/* Hero layout: headline left, grid right */}
-      <div className="relative z-10 flex items-start gap-20 px-16 pt-16 pb-32">
-        <main className="flex flex-col w-[420px] shrink-0">
-          <h1 className="text-[56px] font-bold leading-[1.2] max-w-2xl">
-            <Link
-              href="/projects/coaching"
-              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
-            >
-              Climbing coach.
-            </Link>
-            <Link
-              href="/projects/content"
-              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
-            >
-              Content creator.
-            </Link>
-            <Link
-              href="/projects/vibe-coder"
-              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
-            >
-              Vibe coder.
-            </Link>
-          </h1>
+      {/* Hero headline — left side */}
+      <main className="relative z-10 px-16 pt-16 pb-32">
+        <h1 className="text-[56px] font-bold leading-[1.2]">
+          <Link
+            href="/projects/coaching"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+          >
+            Climbing coach.
+          </Link>
+          <Link
+            href="/projects/content"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+          >
+            Content creator.
+          </Link>
+          <Link
+            href="/projects/vibe-coder"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+          >
+            Vibe coder.
+          </Link>
+        </h1>
+        <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
+          Currently coaching, creating, and coding — mostly in that order.
+        </p>
+      </main>
 
-          <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
-            Currently coaching, creating, and coding — mostly in that order.
-          </p>
-        </main>
-
-        {/* 3×3 pipe grid */}
-        <div className="shrink-0">
-          <HeroGrid />
-        </div>
+      {/* 3×3 pipe grid — centered in viewport */}
+      <div
+        className="absolute z-10"
+        style={{
+          left: "37%",
+          top: "50%",
+          transform: "translateY(-50%)",
+        }}
+      >
+        <HeroGrid />
       </div>
 
       {/* Side panels */}

@@ -147,14 +147,11 @@ export default function HeroGrid() {
     if (phase !== "circulating" || hoveredIndex !== null) return;
     const id = setInterval(() => {
       setStates((prev) => {
-        // Slot 8 is occupied when any icon in special mode is still positioned there
-        const slot8Occupied = prev.some((s, j) => s.posIdx === 8 && inSpecialModeRef.current[j]);
+        // If anyone is at slot 8, freeze the entire belt — prevents pile-up at slot 7
+        if (prev.some((s) => s.posIdx === 8)) return prev;
         return prev.map(({ posIdx }, i) => {
           if (inSpecialModeRef.current[i]) return { posIdx, instant: false };
-          const next = (posIdx + 1) % 9;
-          // Hold position if slot 8 is taken — prevents two icons from overlapping
-          if (next === 8 && slot8Occupied) return { posIdx, instant: false };
-          return { posIdx: next, instant: posIdx === 8 };
+          return { posIdx: (posIdx + 1) % 9, instant: posIdx === 8 };
         });
       });
     }, 1500);
@@ -282,8 +279,11 @@ export default function HeroGrid() {
           const exitState = exitStates[i];
           if (exitState === "exiting") {
             innerClass = "icon-exit";
+            // Pause CSS keyframe mid-frame on hover; resume from same frame on leave
+            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
           } else if (exitState === "reentering") {
             innerClass = "icon-reenter";
+            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
           } else {
             // idle: apply hover scale
             innerStyle = {

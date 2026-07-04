@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Mountain, Camera, Code,
@@ -11,16 +12,27 @@ const CELL = 104;
 const GAP = 78;
 const STEP = CELL + GAP;       // 182
 const GRID = 2 * STEP + CELL;  // 468
-const R = 26;                  // pipe bend radius
-const PIPE = 36;               // entry/exit pipe length
-const CIRCLE = 92;             // icon circle diameter
-const OFFSET = (CELL - CIRCLE) / 2; // 6px — centers circle in cell
+const R = 26;
+const PIPE = 36;
+const CIRCLE = 92;
+const OFFSET = (CELL - CIRCLE) / 2; // 6
 
-// Cell center helpers
 const cx = (col: number) => col * STEP + CELL / 2;
 const cy = (row: number) => row * STEP + CELL / 2;
 
-// Snake path: row0 L→R, row1 R→L, row2 L→R
+// Snake traversal order: row0 L→R, col2 down, row1 R→L, col0 down, row2 L→R
+const SNAKE = [
+  { row: 0, col: 0 },
+  { row: 0, col: 1 },
+  { row: 0, col: 2 },
+  { row: 1, col: 2 },
+  { row: 1, col: 1 },
+  { row: 1, col: 0 },
+  { row: 2, col: 0 },
+  { row: 2, col: 1 },
+  { row: 2, col: 2 },
+] as const;
+
 const trackPath = [
   `M ${cx(0)} ${cy(0) - CELL / 2 - PIPE}`,
   `L ${cx(0)} ${cy(0) - R}`,
@@ -39,25 +51,29 @@ const trackPath = [
 ].join(" ");
 
 interface CellDef {
-  row: number;
-  col: number;
   type: "project" | "toy";
   icon: LucideIcon;
   href?: string;
   dataToy?: string;
 }
 
+// Ordered by SNAKE path so cells[i] starts at SNAKE[i]
 const cells: CellDef[] = [
-  { row: 0, col: 0, type: "project", icon: Mountain,    href: "/projects/coaching" },
-  { row: 0, col: 1, type: "toy",     icon: Wrench,      dataToy: "wrench" },
-  { row: 0, col: 2, type: "project", icon: Camera,      href: "/projects/content" },
-  { row: 1, col: 0, type: "toy",     icon: Keyboard,    dataToy: "keyboard" },
-  { row: 1, col: 1, type: "toy",     icon: Zap,         dataToy: "zap" },
-  { row: 1, col: 2, type: "toy",     icon: Settings,    dataToy: "settings" },
-  { row: 2, col: 0, type: "project", icon: Code,        href: "/projects/vibe-coder" },
-  { row: 2, col: 1, type: "toy",     icon: Volume2,     dataToy: "volume2" },
-  { row: 2, col: 2, type: "toy",     icon: MousePointer, dataToy: "mousepointer" },
+  { type: "project", icon: Mountain,     href: "/projects/coaching" },    // SNAKE[0] (0,0)
+  { type: "toy",     icon: Wrench,       dataToy: "wrench" },             // SNAKE[1] (0,1)
+  { type: "project", icon: Camera,       href: "/projects/content" },     // SNAKE[2] (0,2)
+  { type: "toy",     icon: Settings,     dataToy: "settings" },           // SNAKE[3] (1,2)
+  { type: "toy",     icon: Zap,          dataToy: "zap" },                // SNAKE[4] (1,1)
+  { type: "toy",     icon: Keyboard,     dataToy: "keyboard" },           // SNAKE[5] (1,0)
+  { type: "project", icon: Code,         href: "/projects/vibe-coder" },  // SNAKE[6] (2,0)
+  { type: "toy",     icon: Volume2,      dataToy: "volume2" },            // SNAKE[7] (2,1)
+  { type: "toy",     icon: MousePointer, dataToy: "mousepointer" },       // SNAKE[8] (2,2)
 ];
+
+interface IconState {
+  posIdx: number;
+  instant: boolean; // suppress transition on wrap-around
+}
 
 function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: boolean }) {
   return (
@@ -78,6 +94,22 @@ function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: bo
 }
 
 export default function HeroGrid() {
+  const [states, setStates] = useState<IconState[]>(
+    () => cells.map((_, i) => ({ posIdx: i, instant: false }))
+  );
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setStates((prev) =>
+        prev.map(({ posIdx }) => ({
+          posIdx: (posIdx + 1) % 9,
+          instant: posIdx === 8, // wrap: teleport without transition
+        }))
+      );
+    }, 1500);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
       {/* Pipe track */}
@@ -97,35 +129,30 @@ export default function HeroGrid() {
         />
       </svg>
 
-      {/* Icon cells */}
-      {cells.map((cell) => {
-        const left = cell.col * STEP + OFFSET;
-        const top  = cell.row * STEP + OFFSET;
-        const key  = `${cell.row}-${cell.col}`;
+      {/* Animated icons */}
+      {cells.map((cell, i) => {
+        const { posIdx, instant } = states[i];
+        const { row, col } = SNAKE[posIdx];
+
+        const baseStyle: React.CSSProperties = {
+          position: "absolute",
+          left: OFFSET,
+          top: OFFSET,
+          transform: `translate(${col * STEP}px, ${row * STEP}px)`,
+          transition: instant ? "none" : "transform 1.5s ease-in-out",
+          willChange: "transform",
+        };
 
         if (cell.type === "project" && cell.href) {
           return (
-            <Link
-              key={key}
-              href={cell.href}
-              data-type="project"
-              data-target={cell.href}
-              className="absolute hover:opacity-75 transition-opacity"
-              style={{ left, top }}
-            >
+            <Link key={i} href={cell.href} className="hover:opacity-75" style={baseStyle}>
               <IconCircle icon={cell.icon} isProject />
             </Link>
           );
         }
 
         return (
-          <div
-            key={key}
-            data-type="toy"
-            data-toy={cell.dataToy}
-            className="absolute"
-            style={{ left, top }}
-          >
+          <div key={i} data-toy={cell.dataToy} style={baseStyle}>
             <IconCircle icon={cell.icon} isProject={false} />
           </div>
         );

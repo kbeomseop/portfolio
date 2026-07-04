@@ -67,7 +67,7 @@ export default function Home() {
 
       {/* Hero headline — left side */}
       <main className="relative z-10 px-16 pt-16 pb-32">
-        <h1 className="text-[56px] font-bold leading-[1.2]">
+        <h1 className="text-[56px] font-bold leading-[1.2]" style={{ marginTop: "calc(56px * 1.2)" }}>
           <Link
             href="/projects/coaching"
             className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"

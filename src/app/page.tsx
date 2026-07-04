@@ -70,23 +70,21 @@ export default function Home() {
         <h1 className="text-[56px] font-bold leading-[1.2]">
           <Link
             href="/projects/coaching"
-            className="inline text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
           >
-            Climbing<br />coach.
+            Climbing coach.
           </Link>
-          <br />
           <Link
             href="/projects/content"
-            className="inline text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
           >
-            Content<br />creator.
+            Content creator.
           </Link>
-          <br />
           <Link
             href="/projects/vibe-coder"
-            className="inline text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline"
+            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
           >
-            Vibe<br />coder.
+            Vibe coder.
           </Link>
         </h1>
         <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">

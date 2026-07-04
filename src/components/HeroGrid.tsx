@@ -72,10 +72,15 @@ const cells: CellDef[] = [
 
 const ENTRY_STAGGER = 150;
 const ENTRY_DURATION = 400;
-const EXIT_DURATION = 500;   // must match icon-exit-fall duration in globals.css
-const REENTRY_DURATION = 400; // must match icon-reenter duration in globals.css
+const EXIT_DURATION = 500;
+const REENTRY_DURATION = 400;
 
-type ExitState = "idle" | "exiting" | "reentering";
+interface ExitAnim {
+  active: boolean;
+  phase: "fall" | "rise";
+  progress: number; // 0..1
+  startTime: number; // performance.now()
+}
 
 interface IconState {
   posIdx: number;
@@ -107,8 +112,15 @@ export default function HeroGrid() {
   const [states, setStates] = useState<IconState[]>(
     () => cells.map((_, i) => ({ posIdx: i, prevPosIdx: i }))
   );
-  const [exitStates, setExitStates] = useState<ExitState[]>(() => cells.map(() => "idle"));
-  const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
+  // Triggers re-render each rAF frame while animations are active
+  const [, setAnimTick] = useState(0);
+
+  const exitAnimRef = useRef<ExitAnim[]>(
+    cells.map(() => ({ active: false, phase: "fall", progress: 0, startTime: 0 }))
+  );
+  const rafRef = useRef<number | null>(null);
+  const hoveredIndexRef = useRef<number | null>(null);
+  const startLoopRef = useRef<() => void>(() => {});
 
   // Hover freeze: capture mid-transition computed transforms so icons stop in place
   const outerRefs = useRef<(HTMLElement | null)[]>(cells.map(() => null));
@@ -139,28 +151,60 @@ export default function HeroGrid() {
     return () => clearInterval(id);
   }, [phase, hoveredIndex]);
 
-  // Detect 8→0 wrap-around and play exit → re-entry animation on the inner element
+  // rAF loop: advances progress each frame while any exit animation is active
+  useEffect(() => {
+    const tick = (now: number) => {
+      exitAnimRef.current.forEach((anim) => {
+        if (!anim.active || hoveredIndexRef.current !== null) return;
+
+        const duration = anim.phase === "fall" ? EXIT_DURATION : REENTRY_DURATION;
+        anim.progress = Math.min((now - anim.startTime) / duration, 1);
+
+        if (anim.progress >= 1) {
+          if (anim.phase === "fall") {
+            anim.phase = "rise";
+            anim.progress = 0;
+            anim.startTime = now;
+          } else {
+            anim.active = false;
+          }
+        }
+      });
+
+      setAnimTick((t) => t + 1);
+
+      if (exitAnimRef.current.some((a) => a.active)) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        rafRef.current = null;
+      }
+    };
+
+    startLoopRef.current = () => {
+      if (rafRef.current !== null) return;
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  // Detect 8→0 wrap-around and start exit/reentry animation
   useEffect(() => {
     if (phase !== "circulating") return;
     states.forEach(({ posIdx, prevPosIdx }, i) => {
-      if (posIdx === 0 && prevPosIdx === 8 && exitTimersRef.current[i] === null) {
-        setExitStates((prev) => { const n = [...prev]; n[i] = "exiting"; return n; });
-        exitTimersRef.current[i] = setTimeout(() => {
-          setExitStates((prev) => { const n = [...prev]; n[i] = "reentering"; return n; });
-          exitTimersRef.current[i] = setTimeout(() => {
-            setExitStates((prev) => { const n = [...prev]; n[i] = "idle"; return n; });
-            exitTimersRef.current[i] = null;
-          }, REENTRY_DURATION);
-        }, EXIT_DURATION);
+      if (posIdx === 0 && prevPosIdx === 8 && !exitAnimRef.current[i].active) {
+        exitAnimRef.current[i] = {
+          active: true,
+          phase: "fall",
+          progress: 0,
+          startTime: performance.now(),
+        };
+        startLoopRef.current();
       }
     });
   }, [states, phase]);
-
-  // Cleanup timers on unmount
-  useEffect(() => {
-    const timers = exitTimersRef.current;
-    return () => timers.forEach((t) => t && clearTimeout(t));
-  }, []);
 
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
@@ -186,27 +230,27 @@ export default function HeroGrid() {
         const { posIdx } = states[i];
         const isHoverActive = hoveredIndex !== null;
         const isHovered = hoveredIndex === i;
-        const exitState = exitStates[i];
+        const anim = exitAnimRef.current[i];
         const frozen = frozenTransforms.current[i];
 
         // Outer transform + transition — four cases:
         // 1. hover freeze: use captured mid-transition value, no transform transition
-        // 2. exiting: keep at SNAKE[8] (fall plays at slot 9, not slot 1)
-        // 3. reentering: jump instantly to SNAKE[posIdx] (posIdx===0) without transition
+        // 2. fall phase: keep at SNAKE[8] (fall plays at slot 9, not slot 1)
+        // 3. rise phase: jump instantly to SNAKE[posIdx] (posIdx===0) without transition
         // 4. normal: smooth 1.5s transition to SNAKE[posIdx]
         let outerTransform: string;
         let outerTransition: string;
         if (frozen) {
           outerTransform = frozen;
           outerTransition = "filter 0.2s, opacity 0.2s";
-        } else if (exitState === "exiting") {
-          const { row: r8, col: c8 } = SNAKE[8];
-          outerTransform = `translate(${c8 * STEP}px, ${r8 * STEP}px)`;
+        } else if (anim.active && anim.phase === "fall") {
+          const { row, col } = SNAKE[8];
+          outerTransform = `translate(${col * STEP}px, ${row * STEP}px)`;
           outerTransition = "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s";
-        } else if (exitState === "reentering") {
+        } else if (anim.active && anim.phase === "rise") {
           const { row, col } = SNAKE[posIdx];
           outerTransform = `translate(${col * STEP}px, ${row * STEP}px)`;
-          outerTransition = "filter 0.2s, opacity 0.2s"; // no transform transition → instant jump to slot 1
+          outerTransition = "filter 0.2s, opacity 0.2s"; // instant jump to slot 1
         } else {
           const { row, col } = SNAKE[posIdx];
           outerTransform = `translate(${col * STEP}px, ${row * STEP}px)`;
@@ -222,17 +266,16 @@ export default function HeroGrid() {
           transform: outerTransform,
           transition: outerTransition,
           willChange: "transform",
-          // Dim non-hovered idle icons while any icon is hovered
-          ...(isHoverActive && !isHovered && exitState === "idle" && {
+          // Dim non-hovered non-animating icons while any icon is hovered
+          ...(isHoverActive && !isHovered && !anim.active && {
             filter: "blur(3px)",
             opacity: 0.5,
           }),
           cursor: cell.type === "project" ? "pointer" : "default",
         };
 
-        // Inner: entry fade-in / exit fall-out / re-entry / hover scale
+        // Inner: progress-based translateY/opacity for exit/reentry; else entry fade or hover scale
         let innerStyle: React.CSSProperties = {};
-        let innerClass = "";
 
         if (phase === "entering") {
           const shown = i < visibleCount;
@@ -241,19 +284,22 @@ export default function HeroGrid() {
             transform: `translateY(${shown ? 0 : -60}px)`,
             transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
           };
-        } else {
-          if (exitState === "exiting") {
-            innerClass = "icon-exit";
-            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
-          } else if (exitState === "reentering") {
-            innerClass = "icon-reenter";
-            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
+        } else if (anim.active) {
+          if (anim.phase === "fall") {
+            const ty = anim.progress * 120;
+            // Opaque until 70% then fades out — matches original keyframe
+            const opacity = anim.progress < 0.7 ? 1 : 1 - (anim.progress - 0.7) / 0.3;
+            innerStyle = { transform: `translateY(${ty}px)`, opacity };
           } else {
-            innerStyle = {
-              transform: isHovered ? "scale(1.1)" : "scale(1)",
-              transition: "transform 0.2s ease-out",
-            };
+            // rise: slide up from -60px, fade in
+            const ty = (1 - anim.progress) * -60;
+            innerStyle = { transform: `translateY(${ty}px)`, opacity: anim.progress };
           }
+        } else {
+          innerStyle = {
+            transform: isHovered ? "scale(1.1)" : "scale(1)",
+            transition: "transform 0.2s ease-out",
+          };
         }
 
         const hoverHandlers =
@@ -263,18 +309,27 @@ export default function HeroGrid() {
                   outerRefs.current.forEach((el, idx) => {
                     if (el) frozenTransforms.current[idx] = getComputedStyle(el).transform;
                   });
+                  hoveredIndexRef.current = i;
                   setHoveredIndex(i);
                 },
                 onMouseLeave: () => {
                   frozenTransforms.current = cells.map(() => null);
+                  // Resume each active animation from where it paused
+                  const now = performance.now();
+                  exitAnimRef.current.forEach((a) => {
+                    if (a.active) {
+                      const dur = a.phase === "fall" ? EXIT_DURATION : REENTRY_DURATION;
+                      a.startTime = now - a.progress * dur;
+                    }
+                  });
+                  hoveredIndexRef.current = null;
                   setHoveredIndex(null);
                 },
               }
             : {};
 
         const inner = (
-          // key forces remount on exitState change so CSS animation restarts cleanly
-          <div key={`${i}-${exitStates[i]}`} style={innerStyle} className={innerClass || undefined}>
+          <div style={innerStyle}>
             <IconCircle icon={cell.icon} isProject={cell.type === "project"} />
           </div>
         );

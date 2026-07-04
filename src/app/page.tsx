@@ -66,8 +66,8 @@ export default function Home() {
       </nav>
 
       {/* Hero layout: headline left, grid right */}
-      <div className="relative z-10 flex items-center justify-between px-16 pt-16 pb-32">
-        <main className="flex flex-col justify-center">
+      <div className="relative z-10 flex items-start gap-20 px-16 pt-16 pb-32">
+        <main className="flex flex-col w-[420px] shrink-0">
           <h1 className="text-[56px] font-bold leading-[1.2] max-w-2xl">
             <Link
               href="/projects/coaching"
@@ -95,7 +95,7 @@ export default function Home() {
         </main>
 
         {/* 3×3 pipe grid */}
-        <div className="shrink-0 pr-8">
+        <div className="shrink-0">
           <HeroGrid />
         </div>
       </div>

@@ -72,10 +72,14 @@ const cells: CellDef[] = [
 
 const ENTRY_STAGGER = 150;
 const ENTRY_DURATION = 400;
-const EXIT_WAIT = 500;    // ms after reaching SNAKE[8] before exit starts
-const EXIT_DURATION = 400; // ms for exit animation
+// Exit/re-entry timing:
+//   ARRIVAL_WAIT = 1500ms (CSS arrival transition) + 100ms buffer
+//   EXIT_DURATION must match icon-exit-fall keyframe duration in globals.css
+const ARRIVAL_WAIT = 1600;
+const EXIT_DURATION = 500;
+const REENTRY_DURATION = 400;
 
-type ExitState = "idle" | "exiting" | "exited";
+type ExitState = "idle" | "exiting" | "reentering";
 
 interface IconState {
   posIdx: number;
@@ -122,45 +126,52 @@ export default function HeroGrid() {
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  // Circulation loop — only active after entry is done
+  // Exit / re-entry state
+  const [exitStates, setExitStates] = useState<ExitState[]>(() => cells.map(() => "idle"));
+  const exitStartedRef = useRef<boolean[]>(cells.map(() => false));
+  const inSpecialModeRef = useRef<boolean[]>(cells.map(() => false));
+  const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
+
+  // Circulation loop — skips icons in exit/re-entry mode
   useEffect(() => {
     if (phase !== "circulating") return;
     const id = setInterval(() => {
       setStates((prev) =>
-        prev.map(({ posIdx }) => ({
-          posIdx: (posIdx + 1) % 9,
-          instant: posIdx === 8,
-        }))
+        prev.map(({ posIdx }, i) => {
+          if (inSpecialModeRef.current[i]) return { posIdx, instant: false };
+          return { posIdx: (posIdx + 1) % 9, instant: posIdx === 8 };
+        })
       );
     }, 1500);
     return () => clearInterval(id);
   }, [phase]);
 
-  // Exit animation — fires when any icon reaches SNAKE[8]
-  const [exitStates, setExitStates] = useState<ExitState[]>(() => cells.map(() => "idle"));
-  const exitStartedRef = useRef<boolean[]>(cells.map(() => false));
-  const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
-
+  // Exit → re-entry timer chain (starts after arrival transition completes)
   useEffect(() => {
     if (phase !== "circulating") return;
     states.forEach(({ posIdx }, i) => {
       if (posIdx === 8 && !exitStartedRef.current[i]) {
         exitStartedRef.current[i] = true;
+        inSpecialModeRef.current[i] = true;
+
+        // Wait for 8→9 CSS transition (1500ms) + 100ms buffer, then exit
         exitTimersRef.current[i] = setTimeout(() => {
-          setExitStates((prev) => {
-            const next = [...prev];
-            next[i] = "exiting";
-            return next;
-          });
+          setExitStates((prev) => { const n = [...prev]; n[i] = "exiting"; return n; });
+
+          // After exit animation completes, teleport outer → SNAKE[0], start re-entry
           exitTimersRef.current[i] = setTimeout(() => {
-            setExitStates((prev) => {
-              const next = [...prev];
-              next[i] = "exited";
-              return next;
-            });
-            exitTimersRef.current[i] = null;
+            setStates((prev) => { const n = [...prev]; n[i] = { posIdx: 0, instant: true }; return n; });
+            setExitStates((prev) => { const n = [...prev]; n[i] = "reentering"; return n; });
+
+            // After re-entry animation completes, resume normal circulation
+            exitTimersRef.current[i] = setTimeout(() => {
+              setExitStates((prev) => { const n = [...prev]; n[i] = "idle"; return n; });
+              inSpecialModeRef.current[i] = false;
+              exitStartedRef.current[i] = false;
+              exitTimersRef.current[i] = null;
+            }, REENTRY_DURATION);
           }, EXIT_DURATION);
-        }, EXIT_WAIT);
+        }, ARRIVAL_WAIT);
       }
     });
   }, [states, phase]);
@@ -219,8 +230,8 @@ export default function HeroGrid() {
           const exitState = exitStates[i];
           if (exitState === "exiting") {
             innerClass = "icon-exit";
-          } else if (exitState === "exited") {
-            innerStyle = { opacity: 0, transform: "translateY(120px)" };
+          } else if (exitState === "reentering") {
+            innerClass = "icon-reenter";
           }
         }
 

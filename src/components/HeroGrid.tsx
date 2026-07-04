@@ -110,6 +110,10 @@ export default function HeroGrid() {
   const [exitStates, setExitStates] = useState<ExitState[]>(() => cells.map(() => "idle"));
   const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
 
+  // Hover freeze: capture mid-transition computed transforms so icons stop in place
+  const outerRefs = useRef<(HTMLElement | null)[]>(cells.map(() => null));
+  const frozenTransforms = useRef<(string | null)[]>(cells.map(() => null));
+
   // Entry animation: reveal icons one by one, then switch to circulation
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -179,25 +183,47 @@ export default function HeroGrid() {
 
       {/* Icons — outer div: grid position, inner div: visual effects */}
       {cells.map((cell, i) => {
-        const { posIdx, prevPosIdx } = states[i];
-        const { row, col } = SNAKE[posIdx];
+        const { posIdx } = states[i];
         const isHoverActive = hoveredIndex !== null;
         const isHovered = hoveredIndex === i;
-        // 8→0 wrap-around: teleport outer to SNAKE[0] instantly (no position transition)
-        const isWrapping = posIdx === 0 && prevPosIdx === 8;
+        const exitState = exitStates[i];
+        const frozen = frozenTransforms.current[i];
+
+        // Outer transform + transition — four cases:
+        // 1. hover freeze: use captured mid-transition value, no transform transition
+        // 2. exiting: keep at SNAKE[8] (fall plays at slot 9, not slot 1)
+        // 3. reentering: jump instantly to SNAKE[posIdx] (posIdx===0) without transition
+        // 4. normal: smooth 1.5s transition to SNAKE[posIdx]
+        let outerTransform: string;
+        let outerTransition: string;
+        if (frozen) {
+          outerTransform = frozen;
+          outerTransition = "filter 0.2s, opacity 0.2s";
+        } else if (exitState === "exiting") {
+          const { row: r8, col: c8 } = SNAKE[8];
+          outerTransform = `translate(${c8 * STEP}px, ${r8 * STEP}px)`;
+          outerTransition = "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s";
+        } else if (exitState === "reentering") {
+          const { row, col } = SNAKE[posIdx];
+          outerTransform = `translate(${col * STEP}px, ${row * STEP}px)`;
+          outerTransition = "filter 0.2s, opacity 0.2s"; // no transform transition → instant jump to slot 1
+        } else {
+          const { row, col } = SNAKE[posIdx];
+          outerTransform = `translate(${col * STEP}px, ${row * STEP}px)`;
+          outerTransition = phase === "entering"
+            ? "filter 0.2s, opacity 0.2s"
+            : "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s";
+        }
 
         const outerStyle: React.CSSProperties = {
           position: "absolute",
           left: OFFSET,
           top: OFFSET,
-          transform: `translate(${col * STEP}px, ${row * STEP}px)`,
-          transition:
-            phase === "entering" || isWrapping
-              ? "filter 0.2s, opacity 0.2s"
-              : "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s",
+          transform: outerTransform,
+          transition: outerTransition,
           willChange: "transform",
           // Dim non-hovered idle icons while any icon is hovered
-          ...(isHoverActive && !isHovered && exitStates[i] === "idle" && {
+          ...(isHoverActive && !isHovered && exitState === "idle" && {
             filter: "blur(3px)",
             opacity: 0.5,
           }),
@@ -216,7 +242,6 @@ export default function HeroGrid() {
             transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
           };
         } else {
-          const exitState = exitStates[i];
           if (exitState === "exiting") {
             innerClass = "icon-exit";
             innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
@@ -234,8 +259,16 @@ export default function HeroGrid() {
         const hoverHandlers =
           phase === "circulating"
             ? {
-                onMouseEnter: () => setHoveredIndex(i),
-                onMouseLeave: () => setHoveredIndex(null),
+                onMouseEnter: () => {
+                  outerRefs.current.forEach((el, idx) => {
+                    if (el) frozenTransforms.current[idx] = getComputedStyle(el).transform;
+                  });
+                  setHoveredIndex(i);
+                },
+                onMouseLeave: () => {
+                  frozenTransforms.current = cells.map(() => null);
+                  setHoveredIndex(null);
+                },
               }
             : {};
 
@@ -248,14 +281,16 @@ export default function HeroGrid() {
 
         if (cell.type === "project" && cell.href) {
           return (
-            <Link key={i} href={cell.href} style={outerStyle} {...hoverHandlers}>
+            <Link key={i} href={cell.href} style={outerStyle} {...hoverHandlers}
+              ref={(el) => { outerRefs.current[i] = el; }}>
               {inner}
             </Link>
           );
         }
 
         return (
-          <div key={i} data-toy={cell.dataToy} style={outerStyle} {...hoverHandlers}>
+          <div key={i} data-toy={cell.dataToy} style={outerStyle} {...hoverHandlers}
+            ref={(el) => { outerRefs.current[i] = el; }}>
             {inner}
           </div>
         );

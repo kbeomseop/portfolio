@@ -221,7 +221,8 @@ export default function HeroGrid() {
           transform: `translate(${col * STEP}px, ${row * STEP}px)`,
           transition: outerTransition,
           willChange: "transform",
-          ...(isHoverActive && !isHovered && {
+          // Icons in exit/re-entry are exempt from hover dim so animation remains visible
+          ...(isHoverActive && !isHovered && exitStates[i] === "idle" && {
             filter: "blur(3px)",
             opacity: 0.5,
           }),
@@ -257,13 +258,24 @@ export default function HeroGrid() {
         const hoverHandlers =
           phase === "circulating"
             ? {
-                onMouseEnter: () => setHoveredIndex(i),
-                onMouseLeave: () => setHoveredIndex(null),
+                onMouseEnter: () => {
+                  // Snap all icons to their grid positions by removing transform transition,
+                  // stopping any in-flight CSS transition immediately.
+                  setStates((prev) => prev.map((s) => ({ ...s, instant: true })));
+                  setHoveredIndex(i);
+                },
+                onMouseLeave: () => {
+                  // Re-enable transform transitions for future moves (no visual jump since
+                  // icons are already at their target positions after the snap).
+                  setStates((prev) => prev.map((s) => ({ ...s, instant: false })));
+                  setHoveredIndex(null);
+                },
               }
             : {};
 
         const inner = (
-          <div style={innerStyle} className={innerClass || undefined}>
+          // key changes on exitState transition to force remount, ensuring CSS animation restarts cleanly
+          <div key={`${i}-${exitStates[i]}`} style={innerStyle} className={innerClass || undefined}>
             <IconCircle icon={cell.icon} isProject={cell.type === "project"} />
           </div>
         );

@@ -54,6 +54,7 @@ interface CellDef {
   type: "project" | "toy";
   icon?: LucideIcon;
   iconSrc?: string;
+  iconSize?: number;
   href?: string;
   dataToy?: string;
 }
@@ -62,7 +63,7 @@ interface CellDef {
 const cells: CellDef[] = [
   { type: "project", icon: Mountain,      href: "/projects/coaching" },             // SNAKE[0] (0,0)
   { type: "toy",     icon: Wrench,        dataToy: "wrench" },                      // SNAKE[1] (0,1)
-  { type: "project", iconSrc: "/icons/icon-sns.png",         href: "/projects/content" },  // SNAKE[2] (0,2)
+  { type: "project", iconSrc: "/icons/icon-sns.png", iconSize: 66, href: "/projects/content" },  // SNAKE[2] (0,2)
   { type: "toy",     icon: Settings,      dataToy: "settings" },                   // SNAKE[3] (1,2)
   { type: "toy",     iconSrc: "/icons/icon-motorcycle.png",  dataToy: "motorcycle" },      // SNAKE[4] (1,1)
   { type: "toy",     iconSrc: "/icons/icon-keycap.png",      dataToy: "keycap" },          // SNAKE[5] (1,0)
@@ -91,10 +92,12 @@ interface IconState {
 function IconCircle({
   icon: Icon,
   iconSrc,
+  iconSize = 78,
   isProject,
 }: {
   icon?: LucideIcon;
   iconSrc?: string;
+  iconSize?: number;
   isProject: boolean;
 }) {
   return (
@@ -111,7 +114,7 @@ function IconCircle({
     >
       {iconSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={iconSrc} width={78} height={78} alt="" style={{ objectFit: "contain" }} />
+        <img src={iconSrc} width={iconSize} height={iconSize} alt="" style={{ objectFit: "contain" }} />
       ) : Icon ? (
         <Icon size={34} color={isProject ? "#D85A30" : "#ccc"} strokeWidth={1.5} />
       ) : null}
@@ -344,7 +347,7 @@ export default function HeroGrid() {
 
         const inner = (
           <div style={innerStyle}>
-            <IconCircle icon={cell.icon} iconSrc={cell.iconSrc} isProject={cell.type === "project"} />
+            <IconCircle icon={cell.icon} iconSrc={cell.iconSrc} iconSize={cell.iconSize} isProject={cell.type === "project"} />
           </div>
         );
 

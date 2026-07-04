@@ -72,18 +72,14 @@ const cells: CellDef[] = [
 
 const ENTRY_STAGGER = 150;
 const ENTRY_DURATION = 400;
-// Exit/re-entry timing:
-//   ARRIVAL_WAIT = 1500ms (CSS arrival transition) + 100ms buffer
-//   EXIT_DURATION must match icon-exit-fall keyframe duration in globals.css
-const ARRIVAL_WAIT = 1600;
-const EXIT_DURATION = 500;
-const REENTRY_DURATION = 400;
+const EXIT_DURATION = 500;   // must match icon-exit-fall duration in globals.css
+const REENTRY_DURATION = 400; // must match icon-reenter duration in globals.css
 
 type ExitState = "idle" | "exiting" | "reentering";
 
 interface IconState {
   posIdx: number;
-  instant: boolean; // suppress transition on wrap-around
+  prevPosIdx: number; // previous tick's posIdx — detects 8→0 wrap-around
 }
 
 function IconCircle({ icon: Icon, isProject }: { icon: LucideIcon; isProject: boolean }) {
@@ -109,87 +105,54 @@ export default function HeroGrid() {
   const [visibleCount, setVisibleCount] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [states, setStates] = useState<IconState[]>(
-    () => cells.map((_, i) => ({ posIdx: i, instant: false }))
+    () => cells.map((_, i) => ({ posIdx: i, prevPosIdx: i }))
   );
+  const [exitStates, setExitStates] = useState<ExitState[]>(() => cells.map(() => "idle"));
+  const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
 
   // Entry animation: reveal icons one by one, then switch to circulation
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
-
     for (let i = 0; i < cells.length; i++) {
       timers.push(setTimeout(() => setVisibleCount(i + 1), i * ENTRY_STAGGER));
     }
-
-    // Start circulation after the last icon's animation completes
     const total = (cells.length - 1) * ENTRY_STAGGER + ENTRY_DURATION;
     timers.push(setTimeout(() => setPhase("circulating"), total));
-
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  // Exit / re-entry state
-  const [exitStates, setExitStates] = useState<ExitState[]>(() => cells.map(() => "idle"));
-  const exitStartedRef = useRef<boolean[]>(cells.map(() => false));
-  const inSpecialModeRef = useRef<boolean[]>(cells.map(() => false));
-  const exitTimersRef = useRef<(ReturnType<typeof setTimeout> | null)[]>(cells.map(() => null));
-
-  // Bug 1 fix: DOM refs + frozen computed transforms for hover freeze-in-place
-  const outerRefs = useRef<(HTMLElement | null)[]>(cells.map(() => null));
-  const frozenTransforms = useRef<(string | null)[]>(cells.map(() => null));
-
-  // Circulation loop — pauses during hover, skips icons in exit/re-entry mode
+  // Circulation: every icon advances one slot per tick; pauses while hovering
   useEffect(() => {
     if (phase !== "circulating" || hoveredIndex !== null) return;
     const id = setInterval(() => {
-      setStates((prev) => {
-        // If anyone is at slot 8, freeze the entire belt — prevents pile-up at slot 7
-        if (prev.some((s) => s.posIdx === 8)) return prev;
-        return prev.map(({ posIdx }, i) => {
-          if (inSpecialModeRef.current[i]) return { posIdx, instant: false };
-          return { posIdx: (posIdx + 1) % 9, instant: posIdx === 8 };
-        });
-      });
+      setStates((prev) =>
+        prev.map(({ posIdx }) => ({
+          prevPosIdx: posIdx,
+          posIdx: (posIdx + 1) % 9,
+        }))
+      );
     }, 1500);
     return () => clearInterval(id);
   }, [phase, hoveredIndex]);
 
-  // Exit → re-entry timer chain (starts after arrival transition completes)
-  // Exit chains run to completion independent of hover state — no pause/resume needed here.
+  // Detect 8→0 wrap-around and play exit → re-entry animation on the inner element
   useEffect(() => {
     if (phase !== "circulating") return;
-    states.forEach(({ posIdx }, i) => {
-      if (posIdx === 8 && !exitStartedRef.current[i]) {
-        exitStartedRef.current[i] = true;
-        inSpecialModeRef.current[i] = true;
-
-        // Wait for 8→9 CSS transition (1500ms) + 100ms buffer, then exit
+    states.forEach(({ posIdx, prevPosIdx }, i) => {
+      if (posIdx === 0 && prevPosIdx === 8 && exitTimersRef.current[i] === null) {
+        setExitStates((prev) => { const n = [...prev]; n[i] = "exiting"; return n; });
         exitTimersRef.current[i] = setTimeout(() => {
-          setExitStates((prev) => { const n = [...prev]; n[i] = "exiting"; return n; });
-
-          // After exit animation, find the one free slot (0–8) and teleport there
+          setExitStates((prev) => { const n = [...prev]; n[i] = "reentering"; return n; });
           exitTimersRef.current[i] = setTimeout(() => {
-            setStates((prev) => {
-              const taken = new Set(prev.map((s, j) => (j !== i ? s.posIdx : -1)));
-              const freeSlot = ([0,1,2,3,4,5,6,7,8] as const).find((p) => !taken.has(p)) ?? 0;
-              const n = [...prev];
-              n[i] = { posIdx: freeSlot, instant: true };
-              return n;
-            });
-            setExitStates((prev) => { const n = [...prev]; n[i] = "reentering"; return n; });
-
-            // After re-entry animation completes, resume normal circulation
-            exitTimersRef.current[i] = setTimeout(() => {
-              setExitStates((prev) => { const n = [...prev]; n[i] = "idle"; return n; });
-              inSpecialModeRef.current[i] = false;
-              exitStartedRef.current[i] = false;
-              exitTimersRef.current[i] = null;
-            }, REENTRY_DURATION);
-          }, EXIT_DURATION);
-        }, ARRIVAL_WAIT);
+            setExitStates((prev) => { const n = [...prev]; n[i] = "idle"; return n; });
+            exitTimersRef.current[i] = null;
+          }, REENTRY_DURATION);
+        }, EXIT_DURATION);
       }
     });
   }, [states, phase]);
 
+  // Cleanup timers on unmount
   useEffect(() => {
     const timers = exitTimersRef.current;
     return () => timers.forEach((t) => t && clearTimeout(t));
@@ -214,31 +177,26 @@ export default function HeroGrid() {
         />
       </svg>
 
-      {/* Icons — outer div: positioning + hover dim, inner div: visual effects */}
+      {/* Icons — outer div: grid position, inner div: visual effects */}
       {cells.map((cell, i) => {
-        const { posIdx, instant } = states[i];
+        const { posIdx, prevPosIdx } = states[i];
         const { row, col } = SNAKE[posIdx];
         const isHoverActive = hoveredIndex !== null;
         const isHovered = hoveredIndex === i;
-        const frozen = frozenTransforms.current[i];
-
-        // Outer: circulation positioning + hover blur/opacity
-        // When frozen, omit transform transition so icon stays at the captured mid-animation position
-        const outerTransition =
-          phase === "entering" ? "none"
-          : frozen ? "filter 0.2s, opacity 0.2s"
-          : instant ? "filter 0.2s, opacity 0.2s"
-          : "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s";
+        // 8→0 wrap-around: teleport outer to SNAKE[0] instantly (no position transition)
+        const isWrapping = posIdx === 0 && prevPosIdx === 8;
 
         const outerStyle: React.CSSProperties = {
           position: "absolute",
           left: OFFSET,
           top: OFFSET,
-          // Use frozen computed transform while hovered; fall back to target grid position
-          transform: frozen ?? `translate(${col * STEP}px, ${row * STEP}px)`,
-          transition: outerTransition,
+          transform: `translate(${col * STEP}px, ${row * STEP}px)`,
+          transition:
+            phase === "entering" || isWrapping
+              ? "filter 0.2s, opacity 0.2s"
+              : "transform 1.5s ease-in-out, filter 0.2s, opacity 0.2s",
           willChange: "transform",
-          // Icons in exit/re-entry are exempt from hover dim so animation remains visible
+          // Dim non-hovered idle icons while any icon is hovered
           ...(isHoverActive && !isHovered && exitStates[i] === "idle" && {
             filter: "blur(3px)",
             opacity: 0.5,
@@ -246,7 +204,7 @@ export default function HeroGrid() {
           cursor: cell.type === "project" ? "pointer" : "default",
         };
 
-        // Inner: entry fade-in / exit fall-out / hover scale
+        // Inner: entry fade-in / exit fall-out / re-entry / hover scale
         let innerStyle: React.CSSProperties = {};
         let innerClass = "";
 
@@ -261,13 +219,11 @@ export default function HeroGrid() {
           const exitState = exitStates[i];
           if (exitState === "exiting") {
             innerClass = "icon-exit";
-            // Exit chains play through regardless of hover state — JS timers and CSS stay in sync
-            innerStyle = { animationPlayState: "running" };
+            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
           } else if (exitState === "reentering") {
             innerClass = "icon-reenter";
-            innerStyle = { animationPlayState: "running" };
+            innerStyle = { animationPlayState: isHoverActive ? "paused" : "running" };
           } else {
-            // idle: apply hover scale
             innerStyle = {
               transform: isHovered ? "scale(1.1)" : "scale(1)",
               transition: "transform 0.2s ease-out",
@@ -278,25 +234,13 @@ export default function HeroGrid() {
         const hoverHandlers =
           phase === "circulating"
             ? {
-                onMouseEnter: () => {
-                  // Capture each icon's actual rendered transform (mid-transition position)
-                  outerRefs.current.forEach((el, idx) => {
-                    if (el) frozenTransforms.current[idx] = getComputedStyle(el).transform;
-                  });
-                  setHoveredIndex(i);
-                },
-                onMouseLeave: () => {
-                  // Clear frozen positions — next render uses target grid position with transition
-                  frozenTransforms.current = cells.map(() => null);
-                  setHoveredIndex(null);
-                  // Shallow-copy to re-trigger exit chain effect for any icons at pos 8
-                  setStates((prev) => [...prev]);
-                },
+                onMouseEnter: () => setHoveredIndex(i),
+                onMouseLeave: () => setHoveredIndex(null),
               }
             : {};
 
         const inner = (
-          // key changes on exitState transition to force remount, ensuring CSS animation restarts cleanly
+          // key forces remount on exitState change so CSS animation restarts cleanly
           <div key={`${i}-${exitStates[i]}`} style={innerStyle} className={innerClass || undefined}>
             <IconCircle icon={cell.icon} isProject={cell.type === "project"} />
           </div>
@@ -304,26 +248,14 @@ export default function HeroGrid() {
 
         if (cell.type === "project" && cell.href) {
           return (
-            <Link
-              key={i}
-              href={cell.href}
-              style={outerStyle}
-              {...hoverHandlers}
-              ref={(el) => { outerRefs.current[i] = el; }}
-            >
+            <Link key={i} href={cell.href} style={outerStyle} {...hoverHandlers}>
               {inner}
             </Link>
           );
         }
 
         return (
-          <div
-            key={i}
-            data-toy={cell.dataToy}
-            style={outerStyle}
-            {...hoverHandlers}
-            ref={(el) => { outerRefs.current[i] = el; }}
-          >
+          <div key={i} data-toy={cell.dataToy} style={outerStyle} {...hoverHandlers}>
             {inner}
           </div>
         );

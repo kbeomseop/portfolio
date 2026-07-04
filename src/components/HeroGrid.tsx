@@ -163,8 +163,8 @@ export default function HeroGrid() {
         if (phase === "entering") {
           const shown = i < visibleCount;
           opacity = shown ? 1 : 0;
-          ty = row * STEP + (shown ? 0 : -20);
-          transition = "opacity 0.4s ease, transform 0.4s ease";
+          ty = row * STEP + (shown ? 0 : -60);
+          transition = "opacity 0.4s ease-out, transform 0.4s ease-out";
         } else {
           opacity = 1;
           ty = row * STEP;

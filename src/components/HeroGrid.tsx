@@ -250,12 +250,25 @@ export default function HeroGrid() {
         className="absolute left-0 pointer-events-none"
         style={{ top: -PIPE }}
       >
+        {/* Pipe body */}
         <path
           d={trackPath}
           fill="none"
-          stroke="#ddd"
-          strokeWidth={2}
+          stroke="#e0ddd8"
+          strokeWidth={12}
           strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {/* Top highlight — offset upward to simulate lit upper surface */}
+        <path
+          d={trackPath}
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={0.65}
+          transform="translate(0, -2)"
         />
       </svg>
 

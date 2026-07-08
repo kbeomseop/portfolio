@@ -2,11 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import {
-  Mountain, Code,
-  Wrench, Settings, Volume2, MousePointer,
-  type LucideIcon,
-} from "lucide-react";
 
 const CELL = 104;
 const GAP = 78;
@@ -16,6 +11,7 @@ const R = 26;
 const PIPE = 36;
 const CIRCLE = 92;
 const OFFSET = (CELL - CIRCLE) / 2; // 6
+const ICON_IMG_SIZE = 52;
 
 const cx = (col: number) => col * STEP + CELL / 2;
 const cy = (row: number) => row * STEP + CELL / 2;
@@ -52,24 +48,25 @@ const trackPath = [
 
 interface CellDef {
   type: "project" | "toy";
-  icon?: LucideIcon;
-  iconSrc?: string;
-  iconSize?: number;
+  iconSrc: string;
   href?: string;
   dataToy?: string;
 }
 
-// Ordered by SNAKE path so cells[i] starts at SNAKE[i]
+// Grid layout (SNAKE order): project icons (P) are non-adjacent
+//   hold(P)  bike     sns(P)
+//   crunchyball  coffee  chalkbag
+//   laptop(P)  driver  keycap
 const cells: CellDef[] = [
-  { type: "project", icon: Mountain,      href: "/projects/coaching" },             // SNAKE[0] (0,0)
-  { type: "toy",     icon: Wrench,        dataToy: "wrench" },                      // SNAKE[1] (0,1)
-  { type: "project", iconSrc: "/icons/icon-sns.png", iconSize: 66, href: "/projects/content" },  // SNAKE[2] (0,2)
-  { type: "toy",     icon: Settings,      dataToy: "settings" },                   // SNAKE[3] (1,2)
-  { type: "toy",     iconSrc: "/icons/icon-motorcycle.png",  dataToy: "motorcycle" },      // SNAKE[4] (1,1)
-  { type: "toy",     iconSrc: "/icons/icon-keycap.png",      dataToy: "keycap" },          // SNAKE[5] (1,0)
-  { type: "project", icon: Code,          href: "/projects/vibe-coder" },           // SNAKE[6] (2,0)
-  { type: "toy",     icon: Volume2,       dataToy: "volume2" },                     // SNAKE[7] (2,1)
-  { type: "toy",     icon: MousePointer,  dataToy: "mousepointer" },                // SNAKE[8] (2,2)
+  { type: "project", iconSrc: "/icons/icon-hold.png",        href: "/projects/coaching" },   // SNAKE[0] (0,0)
+  { type: "toy",     iconSrc: "/icons/icon-bike.png",        dataToy: "bike" },               // SNAKE[1] (0,1)
+  { type: "project", iconSrc: "/icons/icon-sns.png",         href: "/projects/content" },     // SNAKE[2] (0,2)
+  { type: "toy",     iconSrc: "/icons/icon-chalkbag.png",    dataToy: "chalkbag" },           // SNAKE[3] (1,2)
+  { type: "toy",     iconSrc: "/icons/icon-coffee.png",      dataToy: "coffee" },             // SNAKE[4] (1,1)
+  { type: "toy",     iconSrc: "/icons/icon-crunchyball.png", dataToy: "crunchyball" },        // SNAKE[5] (1,0)
+  { type: "project", iconSrc: "/icons/icon-laptop.png",      href: "/projects/vibe-coder" },  // SNAKE[6] (2,0)
+  { type: "toy",     iconSrc: "/icons/icon-driver.png",      dataToy: "driver" },             // SNAKE[7] (2,1)
+  { type: "toy",     iconSrc: "/icons/icon-keycap.png",      dataToy: "keycap" },             // SNAKE[8] (2,2)
 ];
 
 const ENTRY_STAGGER = 150;
@@ -89,17 +86,7 @@ interface IconState {
   prevPosIdx: number; // previous tick's posIdx — detects 8→0 wrap-around
 }
 
-function IconCircle({
-  icon: Icon,
-  iconSrc,
-  iconSize = 78,
-  isProject,
-}: {
-  icon?: LucideIcon;
-  iconSrc?: string;
-  iconSize?: number;
-  isProject: boolean;
-}) {
+function IconCircle({ iconSrc }: { iconSrc: string }) {
   return (
     <div
       className="flex items-center justify-center"
@@ -112,12 +99,8 @@ function IconCircle({
         boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
       }}
     >
-      {iconSrc ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={iconSrc} width={iconSize} height={iconSize} alt="" style={{ objectFit: "contain" }} />
-      ) : Icon ? (
-        <Icon size={34} color={isProject ? "#D85A30" : "#ccc"} strokeWidth={1.5} />
-      ) : null}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={iconSrc} width={ICON_IMG_SIZE} height={ICON_IMG_SIZE} alt="" style={{ objectFit: "contain" }} />
     </div>
   );
 }
@@ -283,7 +266,6 @@ export default function HeroGrid() {
           transform: outerTransform,
           transition: outerTransition,
           willChange: "transform",
-          // Dim non-hovered non-animating icons while any icon is hovered
           ...(isHoverActive && !isHovered && {
             filter: "blur(3px)",
             opacity: 0.5,
@@ -304,7 +286,7 @@ export default function HeroGrid() {
         } else if (anim.active) {
           if (anim.phase === "fall") {
             const ty = anim.progress * 120;
-            // Opaque until 70% then fades out — matches original keyframe
+            // Opaque until 70% then fades out
             const opacity = anim.progress < 0.7 ? 1 : 1 - (anim.progress - 0.7) / 0.3;
             innerStyle = { transform: `translateY(${ty}px)`, opacity };
           } else {
@@ -347,7 +329,7 @@ export default function HeroGrid() {
 
         const inner = (
           <div style={innerStyle}>
-            <IconCircle icon={cell.icon} iconSrc={cell.iconSrc} iconSize={cell.iconSize} isProject={cell.type === "project"} />
+            <IconCircle iconSrc={cell.iconSrc} />
           </div>
         );
 

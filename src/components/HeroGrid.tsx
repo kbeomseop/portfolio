@@ -70,6 +70,14 @@ const cells: CellDef[] = [
   { type: "toy",     iconSrc: "/icons/icon-keycap.png",      dataToy: "keycap" },             // SNAKE[8] (2,2)
 ];
 
+// Pulse animation-delay per cell: project icons staggered 0.8s apart, toys unused
+const PULSE_DELAY: string[] = (() => {
+  let pIdx = 0;
+  return cells.map((cell) =>
+    cell.type === "project" ? `${(pIdx++ * 0.8).toFixed(1)}s` : "0s"
+  );
+})();
+
 const ENTRY_STAGGER = 150;
 const ENTRY_DURATION = 400;
 const EXIT_DURATION = 500;
@@ -96,18 +104,24 @@ function IconCircle({
   iconSize = ICON_IMG_SIZE,
   isProject = false,
   isHovered = false,
+  isPulsing = false,
+  pulseDelay = "0s",
 }: {
   iconSrc: string;
   iconSize?: number;
   isProject?: boolean;
   isHovered?: boolean;
+  isPulsing?: boolean;
+  pulseDelay?: string;
 }) {
   const depthShadow = isHovered ? SHADOW_HOVER : SHADOW_BASE;
+  // Inline boxShadow is always set; CSS animation overrides it while pulsing,
+  // then inline value + transition take over the moment the class is removed (hover/exit).
   const boxShadow = isProject ? `${SHADOW_CORAL}, ${depthShadow}` : depthShadow;
 
   return (
     <div
-      className="flex items-center justify-center"
+      className={`flex items-center justify-center${isPulsing ? " project-pulse" : ""}`}
       style={{
         width: CIRCLE,
         height: CIRCLE,
@@ -116,6 +130,7 @@ function IconCircle({
         border: "1px solid #eee",
         boxShadow,
         transition: "box-shadow 0.2s ease-out",
+        ...(isPulsing && { animationDelay: pulseDelay }),
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -346,9 +361,19 @@ export default function HeroGrid() {
               }
             : {};
 
+        // Pulse: project icons only, idle state (not hovered, not animating)
+        const isPulsing = cell.type === "project" && phase === "circulating" && !isHovered && !anim.active;
+
         const inner = (
           <div style={innerStyle}>
-            <IconCircle iconSrc={cell.iconSrc} iconSize={cell.iconSize} isProject={cell.type === "project"} isHovered={isHovered} />
+            <IconCircle
+              iconSrc={cell.iconSrc}
+              iconSize={cell.iconSize}
+              isProject={cell.type === "project"}
+              isHovered={isHovered}
+              isPulsing={isPulsing}
+              pulseDelay={PULSE_DELAY[i]}
+            />
           </div>
         );
 

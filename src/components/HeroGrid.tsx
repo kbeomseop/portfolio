@@ -274,6 +274,25 @@ export default function HeroGrid() {
           opacity={0.4}
           transform="translate(0, 25)"
         />
+        {/* Flow — coral particles drifting in SNAKE direction */}
+        <path
+          d={trackPath}
+          fill="none"
+          stroke="#D85A30"
+          strokeWidth={PIPE_W - 4}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray="3 60"
+          opacity={0.25}
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            from="63"
+            to="0"
+            dur="2.5s"
+            repeatCount="indefinite"
+          />
+        </path>
         {/* Top highlight — upper rim, lit surface */}
         <path
           d={trackPath}

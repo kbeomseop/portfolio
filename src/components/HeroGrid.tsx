@@ -245,7 +245,7 @@ export default function HeroGrid() {
 
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
-      {/* Pipe track — frosted glass: body → coral shadow → top highlight */}
+      {/* Pipe track — glass tube: body → top wall → bottom wall */}
       <svg
         width={GRID}
         height={GRID + PIPE * 2 + PIPE_W + 20}
@@ -254,34 +254,34 @@ export default function HeroGrid() {
         overflow="hidden"
         style={{ top: -(PIPE + PIPE_W / 2 + 10) }}
       >
-        {/* Body — translucent frosted white, butt ends so tube looks open */}
+        {/* Body — more transparent so background shows through */}
         <path
           d={trackPath}
           fill="none"
-          stroke="rgba(255,255,255,0.7)"
+          stroke="rgba(255,255,255,0.45)"
           strokeWidth={PIPE_W}
           strokeLinecap="butt"
           strokeLinejoin="round"
         />
-        {/* Bottom coral shadow — warm tint on lower rim */}
+        {/* Top wall edge — glowing glass rim at upper boundary */}
         <path
           d={trackPath}
           fill="none"
-          stroke="rgba(216,90,48,0.10)"
-          strokeWidth={8}
-          strokeLinecap="round"
+          stroke="rgba(255,255,255,0.95)"
+          strokeWidth={2.5}
+          strokeLinecap="butt"
           strokeLinejoin="round"
-          transform="translate(0, 23)"
+          transform="translate(0, -48)"
         />
-        {/* Top highlight — bright gloss on upper rim */}
+        {/* Bottom wall edge — glowing glass rim at lower boundary */}
         <path
           d={trackPath}
           fill="none"
-          stroke="rgba(255,255,255,0.9)"
-          strokeWidth={16}
-          strokeLinecap="round"
+          stroke="rgba(255,255,255,0.95)"
+          strokeWidth={2.5}
+          strokeLinecap="butt"
           strokeLinejoin="round"
-          transform="translate(0, -23)"
+          transform="translate(0, 48)"
         />
       </svg>
 

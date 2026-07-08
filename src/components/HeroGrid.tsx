@@ -245,7 +245,7 @@ export default function HeroGrid() {
 
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
-      {/* Pipe track — 3-layer cylinder: body → bottom shadow → top highlight */}
+      {/* Pipe track — frosted glass: body → coral shadow → top highlight */}
       <svg
         width={GRID}
         height={GRID + PIPE * 2 + PIPE_W + 20}
@@ -254,55 +254,34 @@ export default function HeroGrid() {
         overflow="hidden"
         style={{ top: -(PIPE + PIPE_W / 2 + 10) }}
       >
-        {/* Body */}
+        {/* Body — translucent frosted white, butt ends so tube looks open */}
         <path
           d={trackPath}
           fill="none"
-          stroke="#e5e0da"
+          stroke="rgba(255,255,255,0.7)"
           strokeWidth={PIPE_W}
           strokeLinecap="butt"
           strokeLinejoin="round"
         />
-        {/* Bottom shadow — lower rim of the cylinder */}
+        {/* Bottom coral shadow — warm tint on lower rim */}
         <path
           d={trackPath}
           fill="none"
-          stroke="#cfc9c2"
-          strokeWidth={12}
-          strokeLinecap="butt"
-          strokeLinejoin="round"
-          opacity={0.4}
-          transform="translate(0, 25)"
-        />
-        {/* Flow — coral particles drifting in SNAKE direction */}
-        <path
-          d={trackPath}
-          fill="none"
-          stroke="#D85A30"
-          strokeWidth={PIPE_W - 4}
+          stroke="rgba(216,90,48,0.10)"
+          strokeWidth={8}
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeDasharray="3 60"
-          opacity={0.25}
-        >
-          <animate
-            attributeName="stroke-dashoffset"
-            from="63"
-            to="0"
-            dur="2.5s"
-            repeatCount="indefinite"
-          />
-        </path>
-        {/* Top highlight — upper rim, lit surface */}
+          transform="translate(0, 23)"
+        />
+        {/* Top highlight — bright gloss on upper rim */}
         <path
           d={trackPath}
           fill="none"
-          stroke="#ffffff"
-          strokeWidth={20}
-          strokeLinecap="butt"
+          stroke="rgba(255,255,255,0.9)"
+          strokeWidth={16}
+          strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.45}
-          transform="translate(0, -27)"
+          transform="translate(0, -23)"
         />
       </svg>
 

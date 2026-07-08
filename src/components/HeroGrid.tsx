@@ -12,6 +12,7 @@ const PIPE = 36;
 const CIRCLE = 92;
 const OFFSET = (CELL - CIRCLE) / 2; // 6
 const ICON_IMG_SIZE = 64;
+const PIPE_W = 100; // pipe stroke-width > CIRCLE (92) — icons appear to travel inside the tube
 
 const cx = (col: number) => col * STEP + CELL / 2;
 const cy = (row: number) => row * STEP + CELL / 2;
@@ -242,20 +243,29 @@ export default function HeroGrid() {
 
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
-      {/* Pipe track */}
+      {/* Pipe track — 3-layer tube: outer wall → body → top highlight */}
       <svg
         width={GRID}
-        height={GRID + PIPE * 2}
-        viewBox={`0 ${-PIPE} ${GRID} ${GRID + PIPE * 2}`}
+        height={GRID + PIPE * 2 + PIPE_W}
+        viewBox={`0 ${-PIPE - PIPE_W / 2} ${GRID} ${GRID + PIPE * 2 + PIPE_W}`}
         className="absolute left-0 pointer-events-none"
-        style={{ top: -PIPE }}
+        style={{ top: -(PIPE + PIPE_W / 2) }}
       >
+        {/* Outer wall — slightly wider and darker, gives tube edge depth */}
+        <path
+          d={trackPath}
+          fill="none"
+          stroke="#d0cbc4"
+          strokeWidth={PIPE_W + 8}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
         {/* Pipe body */}
         <path
           d={trackPath}
           fill="none"
-          stroke="#e0ddd8"
-          strokeWidth={12}
+          stroke="#e8e4e0"
+          strokeWidth={PIPE_W}
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -264,11 +274,11 @@ export default function HeroGrid() {
           d={trackPath}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={2.5}
+          strokeWidth={PIPE_W / 4}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.65}
-          transform="translate(0, -2)"
+          opacity={0.45}
+          transform="translate(0, -3)"
         />
       </svg>
 

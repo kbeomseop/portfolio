@@ -65,7 +65,7 @@ body {
 
 @keyframes project-pulse {
   0%   { box-shadow: 0 0 0 0px rgba(216,90,48,0.30), 0 0 0 3px rgba(216,90,48,0.10), 0 4px 12px rgba(0,0,0,0.06); }
-  70%  { box-shadow: 0 0 0 12px rgba(216,90,48,0),   0 0 0 3px rgba(216,90,48,0.10), 0 4px 12px rgba(0,0,0,0.06); }
+  70%  { box-shadow: 0 0 0 20px rgba(216,90,48,0),   0 0 0 3px rgba(216,90,48,0.10), 0 4px 12px rgba(0,0,0,0.06); }
   100% { box-shadow: 0 0 0 0px rgba(216,90,48,0),    0 0 0 3px rgba(216,90,48,0.10), 0 4px 12px rgba(0,0,0,0.06); }
 }
 .project-pulse {

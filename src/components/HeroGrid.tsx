@@ -11,7 +11,7 @@ const R = 26;
 const PIPE = 86;    // entry/exit pipe length (extended 50px so pipe runs deeper off-screen)
 const CIRCLE = 92;
 const OFFSET = (CELL - CIRCLE) / 2; // 6
-const ICON_IMG_SIZE = 64;
+const ICON_IMG_SIZE = 77;
 const PIPE_W = 104; // tube body stroke-width > CIRCLE (92) — icons appear inside the tube
 
 const cx = (col: number) => col * STEP + CELL / 2;
@@ -64,8 +64,8 @@ interface CellDef {
 const cells: CellDef[] = [
   { type: "project", iconSrc: "/icons/icon-hold.png",        href: "/projects/coaching" },   // SNAKE[0] (0,0)
   { type: "toy",     iconSrc: "/icons/icon-bike.png",        dataToy: "bike" },               // SNAKE[1] (0,1)
-  { type: "project", iconSrc: "/icons/icon-sns.png",         iconSize: 52, href: "/projects/content" },  // SNAKE[2] (0,2)
-  { type: "toy",     iconSrc: "/icons/icon-chalkbag.png",    iconSize: 70, dataToy: "chalkbag" },      // SNAKE[3] (1,2)
+  { type: "project", iconSrc: "/icons/icon-sns.png",         iconSize: 62, href: "/projects/content" },  // SNAKE[2] (0,2)
+  { type: "toy",     iconSrc: "/icons/icon-chalkbag.png",    iconSize: 84, dataToy: "chalkbag" },      // SNAKE[3] (1,2)
   { type: "toy",     iconSrc: "/icons/icon-coffee.png",      dataToy: "coffee" },             // SNAKE[4] (1,1)
   { type: "toy",     iconSrc: "/icons/icon-crunchyball.png", dataToy: "crunchyball" },        // SNAKE[5] (1,0)
   { type: "project", iconSrc: "/icons/icon-laptop.png",      href: "/projects/vibe-coder" },  // SNAKE[6] (2,0)

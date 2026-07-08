@@ -5,10 +5,12 @@ import Link from "next/link";
 import AboutPanel from "@/components/AboutPanel";
 import ContactPanel from "@/components/ContactPanel";
 import HeroGrid from "@/components/HeroGrid";
+import ProjectCarousel from "@/components/ProjectCarousel";
 
 export default function Home() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [heroMode, setHeroMode] = useState<"grid" | "carousel">("grid");
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
@@ -62,6 +64,22 @@ export default function Home() {
               Contact
             </button>
           </li>
+          <li>
+            <button
+              onClick={() => setHeroMode((m) => (m === "grid" ? "carousel" : "grid"))}
+              className="hover:bg-[rgba(216,90,48,0.18)] transition-colors cursor-pointer"
+              style={{
+                fontSize: 13,
+                padding: "6px 14px",
+                borderRadius: 9999,
+                background: "rgba(216,90,48,0.10)",
+                color: "#D85A30",
+                border: "none",
+              }}
+            >
+              {heroMode === "grid" ? "Carousel" : "Grid"}
+            </button>
+          </li>
         </ul>
       </nav>
 
@@ -93,16 +111,32 @@ export default function Home() {
       </main>
 
       {/* 3×3 pipe grid — centered in viewport */}
-      <div
-        className="absolute z-10"
-        style={{
-          left: "37%",
-          top: "50%",
-          transform: "translateY(-50%)",
-        }}
-      >
-        <HeroGrid />
-      </div>
+      {heroMode === "grid" && (
+        <div
+          className="absolute z-10"
+          style={{
+            left: "37%",
+            top: "50%",
+            transform: "translateY(-50%)",
+          }}
+        >
+          <HeroGrid />
+        </div>
+      )}
+
+      {/* Project carousel */}
+      {heroMode === "carousel" && (
+        <div
+          className="absolute z-10"
+          style={{
+            left: "50%",
+            top: "55%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <ProjectCarousel />
+        </div>
+      )}
 
       {/* Side panels */}
       <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />

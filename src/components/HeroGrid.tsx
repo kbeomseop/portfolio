@@ -11,7 +11,7 @@ const R = 26;
 const PIPE = 36;
 const CIRCLE = 92;
 const OFFSET = (CELL - CIRCLE) / 2; // 6
-const ICON_IMG_SIZE = 52;
+const ICON_IMG_SIZE = 64;
 
 const cx = (col: number) => col * STEP + CELL / 2;
 const cy = (row: number) => row * STEP + CELL / 2;
@@ -49,6 +49,7 @@ const trackPath = [
 interface CellDef {
   type: "project" | "toy";
   iconSrc: string;
+  iconSize?: number;
   href?: string;
   dataToy?: string;
 }
@@ -60,8 +61,8 @@ interface CellDef {
 const cells: CellDef[] = [
   { type: "project", iconSrc: "/icons/icon-hold.png",        href: "/projects/coaching" },   // SNAKE[0] (0,0)
   { type: "toy",     iconSrc: "/icons/icon-bike.png",        dataToy: "bike" },               // SNAKE[1] (0,1)
-  { type: "project", iconSrc: "/icons/icon-sns.png",         href: "/projects/content" },     // SNAKE[2] (0,2)
-  { type: "toy",     iconSrc: "/icons/icon-chalkbag.png",    dataToy: "chalkbag" },           // SNAKE[3] (1,2)
+  { type: "project", iconSrc: "/icons/icon-sns.png",         iconSize: 52, href: "/projects/content" },  // SNAKE[2] (0,2)
+  { type: "toy",     iconSrc: "/icons/icon-chalkbag.png",    iconSize: 70, dataToy: "chalkbag" },      // SNAKE[3] (1,2)
   { type: "toy",     iconSrc: "/icons/icon-coffee.png",      dataToy: "coffee" },             // SNAKE[4] (1,1)
   { type: "toy",     iconSrc: "/icons/icon-crunchyball.png", dataToy: "crunchyball" },        // SNAKE[5] (1,0)
   { type: "project", iconSrc: "/icons/icon-laptop.png",      href: "/projects/vibe-coder" },  // SNAKE[6] (2,0)
@@ -86,7 +87,7 @@ interface IconState {
   prevPosIdx: number; // previous tick's posIdx — detects 8→0 wrap-around
 }
 
-function IconCircle({ iconSrc }: { iconSrc: string }) {
+function IconCircle({ iconSrc, iconSize = ICON_IMG_SIZE }: { iconSrc: string; iconSize?: number }) {
   return (
     <div
       className="flex items-center justify-center"
@@ -100,7 +101,7 @@ function IconCircle({ iconSrc }: { iconSrc: string }) {
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={iconSrc} width={ICON_IMG_SIZE} height={ICON_IMG_SIZE} alt="" style={{ objectFit: "contain" }} />
+      <img src={iconSrc} width={iconSize} height={iconSize} alt="" style={{ objectFit: "contain" }} />
     </div>
   );
 }
@@ -329,7 +330,7 @@ export default function HeroGrid() {
 
         const inner = (
           <div style={innerStyle}>
-            <IconCircle iconSrc={cell.iconSrc} />
+            <IconCircle iconSrc={cell.iconSrc} iconSize={cell.iconSize} />
           </div>
         );
 

@@ -20,7 +20,7 @@ export default function Home() {
         style={{
           backgroundImage:
             "linear-gradient(#EEEEEE 1px, transparent 1px), linear-gradient(90deg, #EEEEEE 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
+          backgroundSize: "40px 40px",
         }}
       />
 
@@ -35,16 +35,17 @@ export default function Home() {
 
       {/* Nav */}
       <nav className="relative z-30 flex items-center justify-between px-16 py-8">
-        <div className="flex flex-col" style={{ gap: "3px" }}>
-          <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none">
-            Beomseop Kim
-          </span>
-          <span className="text-[12px] font-normal leading-none" style={{ color: "#999" }}>
-            goes by Malcolm
-          </span>
-        </div>
-        <ul className="flex items-center gap-10">
-          <li>
+        {/* Left group: name + About + Contact */}
+        <div className="flex items-center" style={{ gap: 48 }}>
+          <div className="flex flex-col" style={{ gap: "3px" }}>
+            <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none">
+              Beomseop Kim
+            </span>
+            <span className="text-[12px] font-normal leading-none" style={{ color: "#999" }}>
+              goes by Malcolm
+            </span>
+          </div>
+          <div className="flex items-center" style={{ gap: 32 }}>
             <button
               onClick={() => setAboutOpen((v) => !v)}
               className={`text-[15px] transition-colors cursor-pointer ${
@@ -53,8 +54,6 @@ export default function Home() {
             >
               About
             </button>
-          </li>
-          <li>
             <button
               onClick={() => setContactOpen((v) => !v)}
               className={`text-[15px] transition-colors cursor-pointer ${
@@ -63,24 +62,24 @@ export default function Home() {
             >
               Contact
             </button>
-          </li>
-          <li>
-            <button
-              onClick={() => setHeroMode((m) => (m === "grid" ? "carousel" : "grid"))}
-              className="hover:bg-[rgba(216,90,48,0.18)] transition-colors cursor-pointer"
-              style={{
-                fontSize: 13,
-                padding: "6px 14px",
-                borderRadius: 9999,
-                background: "rgba(216,90,48,0.10)",
-                color: "#D85A30",
-                border: "none",
-              }}
-            >
-              {heroMode === "grid" ? "Carousel" : "Grid"}
-            </button>
-          </li>
-        </ul>
+          </div>
+        </div>
+
+        {/* Right group: Carousel toggle */}
+        <button
+          onClick={() => setHeroMode((m) => (m === "grid" ? "carousel" : "grid"))}
+          className="hover:bg-[rgba(216,90,48,0.18)] transition-colors cursor-pointer"
+          style={{
+            fontSize: 13,
+            padding: "6px 14px",
+            borderRadius: 9999,
+            background: "rgba(216,90,48,0.10)",
+            color: "#D85A30",
+            border: "none",
+          }}
+        >
+          {heroMode === "grid" ? "Carousel" : "Grid"}
+        </button>
       </nav>
 
       {/* Hero headline — left side */}

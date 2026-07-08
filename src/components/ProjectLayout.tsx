@@ -76,17 +76,6 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
           background: heroTheme.gradient,
         }}
       >
-        {/* Grid overlay */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            pointerEvents: "none",
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }}
-        />
         {/* Radial glow */}
         <div
           style={{

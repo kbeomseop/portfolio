@@ -102,6 +102,16 @@ const SHADOW_BASE = "0 4px 12px rgba(0,0,0,0.06)";
 const SHADOW_HOVER = "0 12px 28px rgba(0,0,0,0.16)";
 const SHADOW_CORAL = "0 0 0 3px rgba(216,90,48,0.10)";
 
+// Keycap overlay positions (px, relative to the 64×64 icon image).
+// Adjust top/left/width/height per key to match the actual icon.png layout.
+const KEYCAP_KEYS = [
+  { top: 13, left: 3,  width: 16, height: 26, radius: 3 },
+  { top: 13, left: 24, width: 16, height: 26, radius: 3 },
+  { top: 13, left: 45, width: 16, height: 26, radius: 3 },
+];
+const KEYCAP_CYCLE   = 1.5; // s — full 3-key animation cycle duration
+const KEYCAP_STAGGER = 0.3; // s — delay between each key press
+
 function IconCircle({
   iconSrc,
   iconSize = ICON_IMG_SIZE,
@@ -109,6 +119,7 @@ function IconCircle({
   isHovered = false,
   isPulsing = false,
   pulseDelay = "0s",
+  isKeycap = false,
 }: {
   iconSrc: string;
   iconSize?: number;
@@ -116,6 +127,7 @@ function IconCircle({
   isHovered?: boolean;
   isPulsing?: boolean;
   pulseDelay?: string;
+  isKeycap?: boolean;
 }) {
   const depthShadow = isHovered ? SHADOW_HOVER : SHADOW_BASE;
   // Inline boxShadow is always set; CSS animation overrides it while pulsing,
@@ -136,8 +148,35 @@ function IconCircle({
         ...(isPulsing && { animationDelay: pulseDelay }),
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={iconSrc} width={iconSize} height={iconSize} alt="" style={{ objectFit: "contain" }} />
+      {isKeycap ? (
+        <div style={{ position: "relative", width: iconSize, height: iconSize }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={iconSrc} width={iconSize} height={iconSize} alt="" style={{ objectFit: "contain" }} />
+          {KEYCAP_KEYS.map((k, ki) => (
+            <div
+              key={ki}
+              style={{
+                position: "absolute",
+                top: k.top,
+                left: k.left,
+                width: k.width,
+                height: k.height,
+                borderRadius: k.radius,
+                background: "rgba(0,0,0,0.20)",
+                opacity: 0,
+                pointerEvents: "none",
+                ...(isHovered && {
+                  animation: `keycap-key-press ${KEYCAP_CYCLE}s ease-in-out infinite`,
+                  animationDelay: `${(ki * KEYCAP_STAGGER).toFixed(2)}s`,
+                }),
+              }}
+            />
+          ))}
+        </div>
+      ) : (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={iconSrc} width={iconSize} height={iconSize} alt="" style={{ objectFit: "contain" }} />
+      )}
     </div>
   );
 }
@@ -399,6 +438,7 @@ export default function HeroGrid() {
               isHovered={isHovered}
               isPulsing={isPulsing}
               pulseDelay={PULSE_DELAY[i]}
+              isKeycap={cell.dataToy === "keycap"}
             />
           </div>
         );

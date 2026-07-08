@@ -72,3 +72,10 @@ body {
   animation: project-pulse 2.5s ease-out infinite;
 }
 
+@keyframes keycap-key-press {
+  0%   { opacity: 0; }
+  20%  { opacity: 0.45; }
+  40%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+

@@ -123,19 +123,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* Project carousel */}
-      {heroMode === "carousel" && (
-        <div
-          className="absolute z-10"
-          style={{
-            left: "50%",
-            top: "55%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <ProjectCarousel />
-        </div>
-      )}
+      {/* Project carousel — fixed fullscreen, renders above page content */}
+      {heroMode === "carousel" && <ProjectCarousel />}
 
       {/* Side panels */}
       <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />

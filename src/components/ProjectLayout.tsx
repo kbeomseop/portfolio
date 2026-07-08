@@ -9,29 +9,22 @@ export interface ProjectSection {
   content: React.ReactNode;
 }
 
+interface HeroTheme {
+  gradient: string;
+  blob: string;
+  labelColor: string;
+}
+
 interface Props {
   categoryLabel: string;
   title: React.ReactNode;
   sections: ProjectSection[];
-  heroImages?: string[];
+  heroImage?: string;
+  heroTheme: HeroTheme;
 }
 
-const PLACEHOLDER_BG = ["#F0EBE7", "#EDE4DE", "#F2E9E2"];
-
-export default function ProjectLayout({ categoryLabel, title, sections, heroImages }: Props) {
+export default function ProjectLayout({ categoryLabel, title, sections, heroImage, heroTheme }: Props) {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? "");
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [slideResetKey, setSlideResetKey] = useState(0);
-
-  const slideCount = heroImages ? heroImages.length : 3;
-
-  // Carousel auto-advance; slideResetKey increments on dot click to reset the interval
-  useEffect(() => {
-    const id = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slideCount);
-    }, 4000);
-    return () => clearInterval(id);
-  }, [slideCount, slideResetKey]);
 
   // Section highlight via IntersectionObserver (viewport-based)
   useEffect(() => {
@@ -80,7 +73,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
           alignItems: "center",
           paddingTop: 64,
           paddingBottom: 0,
-          background: "linear-gradient(160deg, #FDF6F2 0%, #F9E4D8 55%, #F6D8C6 100%)",
+          background: heroTheme.gradient,
         }}
       >
         {/* Grid overlay */}
@@ -100,8 +93,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
             position: "absolute",
             inset: 0,
             pointerEvents: "none",
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(216,90,48,0.14) 0%, transparent 100%)",
+            background: heroTheme.blob,
           }}
         />
 
@@ -126,7 +118,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
         <p
           style={{
             fontSize: 13,
-            color: "#B06845",
+            color: heroTheme.labelColor,
             letterSpacing: "1.5px",
             textTransform: "uppercase",
             fontWeight: 600,
@@ -152,78 +144,28 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
           {title}
         </h1>
 
-        {/* Carousel */}
+        {/* Hero image */}
         <div
           style={{
             marginTop: 48,
             zIndex: 1,
-            position: "relative",
             width: 720,
             height: 400,
             borderRadius: "20px 20px 0 0",
             overflow: "hidden",
             boxShadow: "0 24px 60px rgba(0,0,0,0.18)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: heroImage ? undefined : "#F0EBE7",
           }}
         >
-          {Array.from({ length: slideCount }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: currentSlide === i ? 1 : 0,
-                transition: "opacity 0.6s ease-in-out",
-                background: heroImages ? undefined : PLACEHOLDER_BG[i],
-              }}
-            >
-              {heroImages ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={heroImages[i]}
-                  alt=""
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              ) : (
-                <span style={{ fontSize: 13, color: "#bbb" }}>[ photo {i + 1} ]</span>
-              )}
-            </div>
-          ))}
-
-          {/* Dot indicators */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 16,
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              gap: 8,
-              zIndex: 2,
-            }}
-          >
-            {Array.from({ length: slideCount }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setCurrentSlide(i);
-                  setSlideResetKey((k) => k + 1);
-                }}
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  background: currentSlide === i ? "#FFFFFF" : "rgba(255,255,255,0.45)",
-                  transition: "background 0.2s",
-                }}
-              />
-            ))}
-          </div>
+          {heroImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={heroImage} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ) : (
+            <span style={{ fontSize: 13, color: "#bbb" }}>[ hero image ]</span>
+          )}
         </div>
       </section>
 

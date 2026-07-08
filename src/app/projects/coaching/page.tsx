@@ -75,6 +75,11 @@ export default function CoachingPage() {
         </>
       }
       sections={sections}
+      heroTheme={{
+        gradient: "linear-gradient(160deg, #FDF6F2 0%, #F9E0D0 55%, #F5CDB4 100%)",
+        blob: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(216,90,48,0.16) 0%, transparent 100%)",
+        labelColor: "#B06845",
+      }}
     />
   );
 }

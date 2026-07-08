@@ -80,6 +80,11 @@ export default function ContentPage() {
         </>
       }
       sections={sections}
+      heroTheme={{
+        gradient: "linear-gradient(160deg, #FDFAF0 0%, #FAEFC9 55%, #F5E3A8 100%)",
+        blob: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,160,23,0.16) 0%, transparent 100%)",
+        labelColor: "#A8860B",
+      }}
     />
   );
 }

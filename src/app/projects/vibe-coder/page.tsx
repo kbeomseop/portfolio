@@ -84,6 +84,11 @@ export default function VibeCoderPage() {
         </>
       }
       sections={sections}
+      heroTheme={{
+        gradient: "linear-gradient(160deg, #F4F3FB 0%, #E2DFF5 55%, #CFC9EE 100%)",
+        blob: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(93,78,191,0.16) 0%, transparent 100%)",
+        labelColor: "#5D4EBF",
+      }}
     />
   );
 }

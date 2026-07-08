@@ -87,7 +87,24 @@ interface IconState {
   prevPosIdx: number; // previous tick's posIdx — detects 8→0 wrap-around
 }
 
-function IconCircle({ iconSrc, iconSize = ICON_IMG_SIZE }: { iconSrc: string; iconSize?: number }) {
+const SHADOW_BASE = "0 4px 12px rgba(0,0,0,0.06)";
+const SHADOW_HOVER = "0 12px 28px rgba(0,0,0,0.16)";
+const SHADOW_CORAL = "0 0 0 3px rgba(216,90,48,0.10)";
+
+function IconCircle({
+  iconSrc,
+  iconSize = ICON_IMG_SIZE,
+  isProject = false,
+  isHovered = false,
+}: {
+  iconSrc: string;
+  iconSize?: number;
+  isProject?: boolean;
+  isHovered?: boolean;
+}) {
+  const depthShadow = isHovered ? SHADOW_HOVER : SHADOW_BASE;
+  const boxShadow = isProject ? `${SHADOW_CORAL}, ${depthShadow}` : depthShadow;
+
   return (
     <div
       className="flex items-center justify-center"
@@ -97,7 +114,8 @@ function IconCircle({ iconSrc, iconSize = ICON_IMG_SIZE }: { iconSrc: string; ic
         borderRadius: "50%",
         background: "#ffffff",
         border: "1px solid #eee",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+        boxShadow,
+        transition: "box-shadow 0.2s ease-out",
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -297,7 +315,7 @@ export default function HeroGrid() {
           }
         } else {
           innerStyle = {
-            transform: isHovered ? "scale(1.1)" : "scale(1)",
+            transform: isHovered ? "scale(1.2)" : "scale(1)",
             transition: "transform 0.2s ease-out",
           };
         }
@@ -330,7 +348,7 @@ export default function HeroGrid() {
 
         const inner = (
           <div style={innerStyle}>
-            <IconCircle iconSrc={cell.iconSrc} iconSize={cell.iconSize} />
+            <IconCircle iconSrc={cell.iconSrc} iconSize={cell.iconSize} isProject={cell.type === "project"} isHovered={isHovered} />
           </div>
         );
 

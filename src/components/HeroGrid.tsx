@@ -8,11 +8,11 @@ const GAP = 78;
 const STEP = CELL + GAP;       // 182
 const GRID = 2 * STEP + CELL;  // 468
 const R = 26;
-const PIPE = 36;
+const PIPE = 86;    // entry/exit pipe length (extended 50px so pipe runs deeper off-screen)
 const CIRCLE = 92;
 const OFFSET = (CELL - CIRCLE) / 2; // 6
 const ICON_IMG_SIZE = 64;
-const PIPE_W = 100; // pipe stroke-width > CIRCLE (92) — icons appear to travel inside the tube
+const PIPE_W = 104; // tube body stroke-width > CIRCLE (92) — icons appear inside the tube
 
 const cx = (col: number) => col * STEP + CELL / 2;
 const cy = (row: number) => row * STEP + CELL / 2;
@@ -30,8 +30,10 @@ const SNAKE = [
   { row: 2, col: 2 },
 ] as const;
 
+// Path extends 300px beyond the SVG viewport at both ends so the tube
+// is clipped cleanly by the SVG boundary (no visible end cap).
 const trackPath = [
-  `M ${cx(0)} ${cy(0) - CELL / 2 - PIPE}`,
+  `M ${cx(0)} ${cy(0) - CELL / 2 - PIPE - 300}`,
   `L ${cx(0)} ${cy(0) - R}`,
   `Q ${cx(0)} ${cy(0)} ${cx(0) + R} ${cy(0)}`,
   `L ${cx(2) - R} ${cy(0)}`,
@@ -44,7 +46,7 @@ const trackPath = [
   `Q ${cx(0)} ${cy(2)} ${cx(0) + R} ${cy(2)}`,
   `L ${cx(2) - R} ${cy(2)}`,
   `Q ${cx(2)} ${cy(2)} ${cx(2)} ${cy(2) + R}`,
-  `L ${cx(2)} ${cy(2) + CELL / 2 + PIPE}`,
+  `L ${cx(2)} ${cy(2) + CELL / 2 + PIPE + 300}`,
 ].join(" ");
 
 interface CellDef {
@@ -243,42 +245,45 @@ export default function HeroGrid() {
 
   return (
     <div className="relative" style={{ width: GRID, height: GRID }}>
-      {/* Pipe track — 3-layer tube: outer wall → body → top highlight */}
+      {/* Pipe track — 3-layer cylinder: body → bottom shadow → top highlight */}
       <svg
         width={GRID}
-        height={GRID + PIPE * 2 + PIPE_W}
-        viewBox={`0 ${-PIPE - PIPE_W / 2} ${GRID} ${GRID + PIPE * 2 + PIPE_W}`}
+        height={GRID + PIPE * 2 + PIPE_W + 20}
+        viewBox={`0 ${-(PIPE + PIPE_W / 2 + 10)} ${GRID} ${GRID + PIPE * 2 + PIPE_W + 20}`}
         className="absolute left-0 pointer-events-none"
-        style={{ top: -(PIPE + PIPE_W / 2) }}
+        overflow="hidden"
+        style={{ top: -(PIPE + PIPE_W / 2 + 10) }}
       >
-        {/* Outer wall — slightly wider and darker, gives tube edge depth */}
+        {/* Body */}
         <path
           d={trackPath}
           fill="none"
-          stroke="#d0cbc4"
-          strokeWidth={PIPE_W + 8}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {/* Pipe body */}
-        <path
-          d={trackPath}
-          fill="none"
-          stroke="#e8e4e0"
+          stroke="#e5e0da"
           strokeWidth={PIPE_W}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           strokeLinejoin="round"
         />
-        {/* Top highlight — offset upward to simulate lit upper surface */}
+        {/* Bottom shadow — lower rim of the cylinder */}
+        <path
+          d={trackPath}
+          fill="none"
+          stroke="#cfc9c2"
+          strokeWidth={12}
+          strokeLinecap="butt"
+          strokeLinejoin="round"
+          opacity={0.4}
+          transform="translate(0, 25)"
+        />
+        {/* Top highlight — upper rim, lit surface */}
         <path
           d={trackPath}
           fill="none"
           stroke="#ffffff"
-          strokeWidth={PIPE_W / 4}
-          strokeLinecap="round"
+          strokeWidth={20}
+          strokeLinecap="butt"
           strokeLinejoin="round"
           opacity={0.45}
-          transform="translate(0, -3)"
+          transform="translate(0, -27)"
         />
       </svg>
 

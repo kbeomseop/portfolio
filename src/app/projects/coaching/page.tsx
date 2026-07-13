@@ -10,9 +10,10 @@ const sections: ProjectSection[] = [
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Introduction</h2>
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
-          I coach climbers at a bouldering gym in Seoul — from first-timers testing
-          the mats to teenagers chasing their first real send. The job, as I see it:
-          get people on the wall, keep them safe on it, and make them want to come back.
+          I coach climbers at PEAKERS Sinchon, a bouldering gym in Seoul — from
+          first-timers testing the mats to teenagers chasing their first real send.
+          The job, as I see it: get people on the wall, keep them safe on it, and
+          make them want to come back.
         </p>
       </div>
     ),
@@ -155,8 +156,8 @@ export default function CoachingPage() {
       categoryLabel="Coaching"
       title={
         <>
-          Growing /<br />
-          PEAKERS Sinchon
+          From first fall /<br />
+          to first send
         </>
       }
       sections={sections}

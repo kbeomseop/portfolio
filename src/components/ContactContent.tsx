@@ -63,6 +63,23 @@ export default function ContactContent() {
         ))}
       </ul>
 
+      <a
+        href="/kim-beomseop-cv.pdf"
+        download
+        className="flex items-center justify-center w-full hover:opacity-90 transition-opacity"
+        style={{
+          background: "#D85A30",
+          color: "#FFFFFF",
+          fontSize: 14,
+          fontWeight: 600,
+          padding: "13px 0",
+          borderRadius: 12,
+          textDecoration: "none",
+        }}
+      >
+        Download CV (PDF)
+      </a>
+
       <div style={{ borderTop: "0.5px solid rgba(255,255,255,0.15)" }} />
 
       <section>

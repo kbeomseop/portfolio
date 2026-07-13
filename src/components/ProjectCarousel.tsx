@@ -107,7 +107,7 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
         display: "flex",
         alignItems: "center",
         gap: 56,
-        padding: "0 96px",
+        padding: "0 40px",
         zIndex: 20,
       }}
     >
@@ -148,7 +148,7 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
           className="hover:-translate-y-[6px] transition-[transform] duration-[250ms] ease-out"
           style={{
             flexShrink: 0,
-            width: 900,
+            width: 1350,
             height: CARD_H,
             borderRadius: 24,
             overflow: "hidden",

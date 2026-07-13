@@ -9,6 +9,10 @@ import ProjectCarousel, { type CarouselHandle } from "@/components/ProjectCarous
 
 const CAROUSEL_LABELS = ["About", "Coaching", "Content", "Vibe coding", "Contact"];
 
+const STATUS_TEXT = "Moving to Auckland — September 2026 · Working Holiday Visa · Open to climbing gym roles";
+// 오클랜드 도착 후 아래로 교체:
+// const STATUS_TEXT = "Currently in Auckland · Working Holiday Visa · Open to climbing gym roles";
+
 export default function Home() {
   const [aboutOpen, setAboutOpen]   = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
@@ -51,14 +55,9 @@ export default function Home() {
       <nav className="relative z-30 flex items-center justify-between px-16 py-8">
         {/* Left group */}
         <div className="flex items-center" style={{ gap: 48 }}>
-          <div className="flex flex-col" style={{ gap: "3px" }}>
-            <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none">
-              Beomseop Kim
-            </span>
-            <span className="text-[12px] font-normal leading-none" style={{ color: "#999" }}>
-              goes by Malcolm
-            </span>
-          </div>
+          <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none">
+            Beomseop Kim
+          </span>
 
           {heroMode === "grid" ? (
             /* Grid mode: About + Contact panel toggles */
@@ -124,7 +123,32 @@ export default function Home() {
       {/* Hero headline — grid mode only */}
       {heroMode === "grid" && (
         <main className="relative z-10 px-16 pt-16 pb-32">
-          <h1 className="text-[56px] font-bold leading-[1.2]" style={{ marginTop: "calc(56px * 1.2)" }}>
+          <div
+            className="inline-flex items-center w-fit"
+            style={{
+              gap: 8,
+              fontSize: 13,
+              fontWeight: 500,
+              color: "#993C1D",
+              background: "#FAECE7",
+              border: "1px solid #F0997B",
+              borderRadius: 9999,
+              padding: "6px 14px",
+              marginTop: "calc(56px * 1.2)",
+            }}
+          >
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: "#D85A30",
+                flexShrink: 0,
+              }}
+            />
+            {STATUS_TEXT}
+          </div>
+          <h1 className="text-[56px] font-bold leading-[1.2]" style={{ marginTop: 20 }}>
             <Link
               href="/projects/coaching"
               className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"

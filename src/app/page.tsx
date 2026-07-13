@@ -1,16 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import AboutPanel from "@/components/AboutPanel";
 import ContactPanel from "@/components/ContactPanel";
 import HeroGrid from "@/components/HeroGrid";
-import ProjectCarousel from "@/components/ProjectCarousel";
+import ProjectCarousel, { type CarouselHandle } from "@/components/ProjectCarousel";
+
+const CAROUSEL_LABELS = ["About", "Coaching", "Content", "Vibe coding", "Contact"];
 
 export default function Home() {
-  const [aboutOpen, setAboutOpen] = useState(false);
+  const [aboutOpen, setAboutOpen]   = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [heroMode, setHeroMode] = useState<"grid" | "carousel">("grid");
+  const [heroMode, setHeroMode]     = useState<"grid" | "carousel">("grid");
+  const [activeSlide, setActiveSlide] = useState(0);
+  const carouselRef = useRef<CarouselHandle>(null);
+
+  // Close panels when entering carousel mode
+  useEffect(() => {
+    if (heroMode === "carousel") {
+      setAboutOpen(false);
+      setContactOpen(false);
+    }
+  }, [heroMode]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
@@ -35,7 +47,7 @@ export default function Home() {
 
       {/* Nav */}
       <nav className="relative z-30 flex items-center justify-between px-16 py-8">
-        {/* Left group: name + About + Contact */}
+        {/* Left group */}
         <div className="flex items-center" style={{ gap: 48 }}>
           <div className="flex flex-col" style={{ gap: "3px" }}>
             <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none">
@@ -45,27 +57,52 @@ export default function Home() {
               goes by Malcolm
             </span>
           </div>
-          <div className="flex items-center" style={{ gap: 32 }}>
-            <button
-              onClick={() => setAboutOpen((v) => !v)}
-              className={`text-[15px] transition-colors cursor-pointer ${
-                aboutOpen ? "text-[#D85A30]" : "text-[#555] hover:text-[#D85A30]"
-              }`}
-            >
-              About
-            </button>
-            <button
-              onClick={() => setContactOpen((v) => !v)}
-              className={`text-[15px] transition-colors cursor-pointer ${
-                contactOpen ? "text-[#D85A30]" : "text-[#555] hover:text-[#D85A30]"
-              }`}
-            >
-              Contact
-            </button>
-          </div>
+
+          {heroMode === "grid" ? (
+            /* Grid mode: About + Contact panel toggles */
+            <div className="flex items-center" style={{ gap: 32 }}>
+              <button
+                onClick={() => setAboutOpen((v) => !v)}
+                className={`text-[15px] transition-colors cursor-pointer ${
+                  aboutOpen ? "text-[#D85A30]" : "text-[#555] hover:text-[#D85A30]"
+                }`}
+              >
+                About
+              </button>
+              <button
+                onClick={() => setContactOpen((v) => !v)}
+                className={`text-[15px] transition-colors cursor-pointer ${
+                  contactOpen ? "text-[#D85A30]" : "text-[#555] hover:text-[#D85A30]"
+                }`}
+              >
+                Contact
+              </button>
+            </div>
+          ) : (
+            /* Carousel mode: 5 slide label buttons */
+            <div className="flex items-center" style={{ gap: 28 }}>
+              {CAROUSEL_LABELS.map((label, i) => (
+                <button
+                  key={label}
+                  onClick={() => carouselRef.current?.scrollToIndex(i)}
+                  className="transition-colors cursor-pointer hover:text-[#555]"
+                  style={{
+                    fontSize: 14,
+                    color: activeSlide === i ? "#D85A30" : "#999",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    fontWeight: activeSlide === i ? 600 : 400,
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Right group: Carousel toggle */}
+        {/* Right group: mode toggle */}
         <button
           onClick={() => setHeroMode((m) => (m === "grid" ? "carousel" : "grid"))}
           className="hover:bg-[rgba(216,90,48,0.18)] transition-colors cursor-pointer"
@@ -109,25 +146,23 @@ export default function Home() {
         </p>
       </main>
 
-      {/* 3×3 pipe grid — centered in viewport */}
+      {/* 3×3 pipe grid */}
       {heroMode === "grid" && (
         <div
           className="absolute z-10"
-          style={{
-            left: "37%",
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
+          style={{ left: "37%", top: "50%", transform: "translateY(-50%)" }}
         >
           <HeroGrid />
         </div>
       )}
 
-      {/* Project carousel — fixed fullscreen, renders above page content */}
-      {heroMode === "carousel" && <ProjectCarousel />}
+      {/* Full-screen carousel */}
+      {heroMode === "carousel" && (
+        <ProjectCarousel ref={carouselRef} onActiveChange={setActiveSlide} />
+      )}
 
-      {/* Side panels */}
-      <AboutPanel open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      {/* Side panels (grid mode only) */}
+      <AboutPanel   open={aboutOpen}   onClose={() => setAboutOpen(false)} />
       <ContactPanel open={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );

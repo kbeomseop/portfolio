@@ -36,14 +36,16 @@ export default function Home() {
         }}
       />
 
-      {/* Coral blob */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 60% at 75% 0%, rgba(216, 90, 48, 0.18) 0%, transparent 100%)",
-        }}
-      />
+      {/* Coral blob — grid mode only */}
+      {heroMode === "grid" && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 70% 60% at 75% 0%, rgba(216, 90, 48, 0.18) 0%, transparent 100%)",
+          }}
+        />
+      )}
 
       {/* Nav */}
       <nav className="relative z-30 flex items-center justify-between px-16 py-8">
@@ -119,32 +121,34 @@ export default function Home() {
         </button>
       </nav>
 
-      {/* Hero headline — left side */}
-      <main className="relative z-10 px-16 pt-16 pb-32">
-        <h1 className="text-[56px] font-bold leading-[1.2]" style={{ marginTop: "calc(56px * 1.2)" }}>
-          <Link
-            href="/projects/coaching"
-            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
-          >
-            Climbing coach.
-          </Link>
-          <Link
-            href="/projects/content"
-            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
-          >
-            Content creator.
-          </Link>
-          <Link
-            href="/projects/vibe-coder"
-            className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
-          >
-            Vibe coder.
-          </Link>
-        </h1>
-        <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
-          Currently coaching, creating, and coding — mostly in that order.
-        </p>
-      </main>
+      {/* Hero headline — grid mode only */}
+      {heroMode === "grid" && (
+        <main className="relative z-10 px-16 pt-16 pb-32">
+          <h1 className="text-[56px] font-bold leading-[1.2]" style={{ marginTop: "calc(56px * 1.2)" }}>
+            <Link
+              href="/projects/coaching"
+              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
+            >
+              Climbing coach.
+            </Link>
+            <Link
+              href="/projects/content"
+              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
+            >
+              Content creator.
+            </Link>
+            <Link
+              href="/projects/vibe-coder"
+              className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
+            >
+              Vibe coder.
+            </Link>
+          </h1>
+          <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
+            Currently coaching, creating, and coding — mostly in that order.
+          </p>
+        </main>
+      )}
 
       {/* 3×3 pipe grid */}
       {heroMode === "grid" && (

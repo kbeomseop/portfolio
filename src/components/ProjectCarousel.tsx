@@ -7,7 +7,7 @@ import ContactContent from "@/components/ContactContent";
 
 export type CarouselHandle = { scrollToIndex: (i: number) => void };
 
-const CARD_H = "min(640px, calc(100vh - 152px))";
+const CARD_H = "calc(100vh - 88px - 48px)";
 
 const projectCards = [
   {
@@ -50,11 +50,17 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
     },
   }));
 
-  // Wheel → horizontal scroll (passive:false so preventDefault works)
+  // Wheel → horizontal scroll, except when over a vertically-scrollable card
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
     const handler = (e: WheelEvent) => {
+      const scrollable = (e.target as HTMLElement).closest("[data-vertical-scroll]") as HTMLElement | null;
+      if (scrollable) {
+        const atTop    = scrollable.scrollTop <= 0 && e.deltaY < 0;
+        const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1 && e.deltaY > 0;
+        if (!atTop && !atBottom) return; // let the card scroll vertically
+      }
       e.preventDefault();
       container.scrollLeft += e.deltaY + e.deltaX;
     };
@@ -128,7 +134,7 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
           </span>
         </div>
         <div style={{ borderTop: "0.5px solid rgba(255,255,255,0.25)", margin: "0 32px", flexShrink: 0 }} />
-        <div className="scrollbar-hide flex-1 overflow-y-auto" style={{ padding: "20px 32px" }}>
+        <div data-vertical-scroll className="scrollbar-hide flex-1 overflow-y-auto" style={{ padding: "20px 32px" }}>
           <AboutContent />
         </div>
       </div>
@@ -204,7 +210,7 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
           </span>
         </div>
         <div style={{ borderTop: "0.5px solid rgba(255,255,255,0.15)", margin: "0 32px", flexShrink: 0 }} />
-        <div className="scrollbar-hide flex-1 overflow-y-auto" style={{ padding: "24px 32px" }}>
+        <div data-vertical-scroll className="scrollbar-hide flex-1 overflow-y-auto" style={{ padding: "24px 32px" }}>
           <ContactContent />
         </div>
       </div>

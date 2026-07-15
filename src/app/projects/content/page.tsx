@@ -36,6 +36,33 @@ const sections: ProjectSection[] = [
             <p className="text-[13px] text-[#999] mt-2">best-performing reel</p>
           </div>
         </div>
+        <div className="mt-8">
+          <div className="flex gap-4 max-w-[720px]">
+            {[
+              { src: "/content/reel-pov-instructor.webp", views: "50K views", alt: "Reel: a day in the life of a climbing instructor" },
+              { src: "/content/reel-jonber.webp", views: "25K views", alt: "Reel: coming back to a project after a week off" },
+              { src: "/content/reel-tomoa-step.webp", views: "22K views", alt: "Reel: Tomoa skip technique breakdown" },
+            ].map(({ src, views, alt }) => (
+              <div key={src} className="flex flex-col gap-2">
+                <img
+                  src={src}
+                  alt={alt}
+                  className="w-[140px] rounded-[10px]"
+                  style={{ border: "0.5px solid #eee" }}
+                />
+                <span className="text-[12px] text-[#999]">{views}</span>
+              </div>
+            ))}
+          </div>
+          <a
+            href="https://www.instagram.com/peakers_sinchon/reels/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-4 text-[13px] font-medium text-[#A8860B] hover:opacity-70 transition-opacity"
+          >
+            More on Instagram →
+          </a>
+        </div>
       </div>
     ),
   },
@@ -51,6 +78,26 @@ const sections: ProjectSection[] = [
           waiting on a designer. Same goes for graphics — event posters and promo
           visuals are mine too, start to finish.
         </p>
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[720px]">
+          <div className="flex flex-col gap-2">
+            <img
+              src="/content/poster-hotdog-set.webp"
+              alt="In-gym menu poster for the hot dog set"
+              className="w-full rounded-[10px]"
+              style={{ border: "0.5px solid #eee" }}
+            />
+            <span className="text-[12px] text-[#999]">In-gym menu poster</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            <img
+              src="/content/poster-instructor-beomseop.webp"
+              alt="Instructor spotlight poster, one of a series for the coaching team"
+              className="w-full rounded-[10px]"
+              style={{ border: "0.5px solid #eee" }}
+            />
+            <span className="text-[12px] text-[#999]">Instructor spotlight — one of a series made for the whole coaching team</span>
+          </div>
+        </div>
       </div>
     ),
   },

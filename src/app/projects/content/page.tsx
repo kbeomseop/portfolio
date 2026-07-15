@@ -29,7 +29,7 @@ const sections: ProjectSection[] = [
         <div className="mt-8 flex gap-12">
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">+50%</p>
-            <p className="text-[13px] text-[#999] mt-2">Instagram growth</p>
+            <p className="text-[13px] text-[#999] mt-2">Instagram growth since taking over in March 2026</p>
           </div>
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">50K</p>
@@ -48,7 +48,8 @@ const sections: ProjectSection[] = [
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           Every reel starts as a phone clip and ends up cut, captioned, and color-graded
           in CapCut or Canva — usually the same day it&apos;s filmed. No outsourcing, no
-          waiting on a designer.
+          waiting on a designer. Same goes for graphics — event posters and promo
+          visuals are mine too, start to finish.
         </p>
       </div>
     ),
@@ -61,8 +62,11 @@ const sections: ProjectSection[] = [
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Going local</h2>
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           Figured out who was actually around — turns out that&apos;s a lot of university
-          students. So instead of casting a wide net, I built a student discount and pushed
-          it through Reels aimed squarely at people walking past the gym every day.
+          students. So instead of casting a wide net, I built student discount passes and
+          pushed them through Reels aimed squarely at people walking past the gym every
+          day. Three campaigns in, the playbook keeps getting sharper — the latest, a
+          five-session student pass, runs with promotion support from nearby university
+          student councils.
         </p>
       </div>
     ),

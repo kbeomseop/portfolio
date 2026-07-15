@@ -13,6 +13,28 @@ function ScreenshotPlaceholder() {
   );
 }
 
+function ProjectLinks() {
+  // TODO: URL 확정 시 span을 <a href>로 교체
+  const pill = {
+    display: "inline-flex",
+    alignItems: "center",
+    fontSize: 13,
+    fontWeight: 500,
+    color: "#5D4EBF",
+    border: "1px solid #CFC9EE",
+    borderRadius: 9999,
+    padding: "7px 16px",
+    opacity: 0.5,
+    cursor: "default",
+  } as const;
+  return (
+    <div className="flex gap-3 mt-4">
+      <span style={pill}>Try it live</span>
+      <span style={pill}>GitHub</span>
+    </div>
+  );
+}
+
 const sections: ProjectSection[] = [
   {
     id: "introduction",
@@ -23,7 +45,8 @@ const sections: ProjectSection[] = [
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           Work gave me problems worth solving, training gave me a reason to build
           something just for myself, and curiosity did the rest. I didn&apos;t know how
-          to code — so I taught myself with AI, one small project at a time.
+          to code — so I taught myself with AI, mostly Claude Code, one small
+          project at a time.
         </p>
       </div>
     ),
@@ -37,8 +60,10 @@ const sections: ProjectSection[] = [
         <ScreenshotPlaceholder />
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
           A PWA for managing climbing students — lesson notes, bouldering and endurance
-          progress, all in one place. Still in daily use at the gym.
+          progress, all in one place. Still in daily use at the gym, where it tracks
+          19 regular students.
         </p>
+        <ProjectLinks />
       </div>
     ),
   },
@@ -54,6 +79,7 @@ const sections: ProjectSection[] = [
           into a bouldering puzzle — built to make the sport feel more like play, less
           like a wall to be afraid of.
         </p>
+        <ProjectLinks />
       </div>
     ),
   },
@@ -68,6 +94,7 @@ const sections: ProjectSection[] = [
           An interval timer built for climbing training, because a phone stopwatch was
           never going to cut it.
         </p>
+        <ProjectLinks />
       </div>
     ),
   },

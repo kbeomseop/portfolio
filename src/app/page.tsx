@@ -52,16 +52,16 @@ export default function Home() {
       )}
 
       {/* Nav */}
-      <nav className="relative z-30 flex items-center justify-between px-16 py-8">
+      <nav className="relative z-30 flex items-center justify-between px-5 py-6 md:px-16 md:py-8">
         {/* Left group */}
-        <div className="flex items-center" style={{ gap: 48 }}>
-          <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none">
+        <div className="flex items-center gap-6 md:gap-12 min-w-0">
+          <span className="text-[15px] font-semibold tracking-tight text-[#444] leading-none whitespace-nowrap">
             Beomseop Kim
           </span>
 
           {heroMode === "grid" ? (
             /* Grid mode: About + Contact panel toggles */
-            <div className="flex items-center" style={{ gap: 32 }}>
+            <div className="flex items-center gap-5 md:gap-8">
               <button
                 onClick={() => setAboutOpen((v) => !v)}
                 className={`text-[15px] transition-colors cursor-pointer ${
@@ -81,7 +81,7 @@ export default function Home() {
             </div>
           ) : (
             /* Carousel mode: 5 slide label buttons */
-            <div className="flex items-center" style={{ gap: 28 }}>
+            <div className="flex items-center gap-4 md:gap-7 overflow-x-auto scrollbar-hide min-w-0">
               {CAROUSEL_LABELS.map((label, i) => (
                 <button
                   key={label}
@@ -94,6 +94,7 @@ export default function Home() {
                     border: "none",
                     padding: 0,
                     fontWeight: activeSlide === i ? 600 : 400,
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {label}
@@ -122,19 +123,16 @@ export default function Home() {
 
       {/* Hero headline — grid mode only */}
       {heroMode === "grid" && (
-        <main className="relative z-10 px-16 pt-16 pb-32">
+        <main className="relative z-10 px-5 pt-8 pb-20 md:px-16 md:pt-16 md:pb-32">
           <div
-            className="inline-flex items-center w-fit"
+            className="inline-flex items-center w-fit text-[12px] md:text-[13px] px-3 py-[5px] md:px-[14px] md:py-[6px] mt-8 md:mt-[67px]"
             style={{
               gap: 8,
-              fontSize: 13,
               fontWeight: 500,
               color: "#993C1D",
               background: "#FAECE7",
               border: "1px solid #F0997B",
               borderRadius: 9999,
-              padding: "6px 14px",
-              marginTop: "calc(56px * 1.2)",
             }}
           >
             <span
@@ -148,7 +146,7 @@ export default function Home() {
             />
             {STATUS_TEXT}
           </div>
-          <h1 className="text-[56px] font-bold leading-[1.2]" style={{ marginTop: 20 }}>
+          <h1 className="text-[34px] sm:text-[44px] md:text-[56px] font-bold leading-[1.2]" style={{ marginTop: 20 }}>
             <Link
               href="/projects/coaching"
               className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
@@ -168,7 +166,7 @@ export default function Home() {
               Vibe coder.
             </Link>
           </h1>
-          <p className="mt-6 text-[16px] leading-[1.65] text-[#555] whitespace-nowrap">
+          <p className="mt-6 text-[16px] leading-[1.65] text-[#555] md:whitespace-nowrap">
             Currently coaching, creating, and coding — mostly in that order.
           </p>
         </main>
@@ -177,7 +175,7 @@ export default function Home() {
       {/* 3×3 pipe grid */}
       {heroMode === "grid" && (
         <div
-          className="absolute z-10"
+          className="hidden md:block absolute z-10"
           style={{ left: "37%", top: "50%", transform: "translateY(-50%)" }}
         >
           <HeroGrid />

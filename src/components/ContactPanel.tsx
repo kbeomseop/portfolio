@@ -10,7 +10,7 @@ interface Props {
 export default function ContactPanel({ open, onClose }: Props) {
   return (
     <aside
-      className="fixed top-24 right-6 z-20 w-[400px] max-h-[calc(100vh-120px)] flex flex-col transition-transform duration-300 ease-in-out"
+      className="fixed top-24 left-3 right-3 w-auto md:left-auto md:right-6 md:w-[400px] z-20 max-h-[calc(100vh-120px)] flex flex-col transition-transform duration-300 ease-in-out"
       style={{
         transform: open ? "translateX(0)" : "translateX(calc(100% + 24px))",
         backgroundColor: "#1A1A1A",

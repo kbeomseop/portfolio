@@ -10,7 +10,7 @@ interface Props {
 export default function AboutPanel({ open, onClose }: Props) {
   return (
     <aside
-      className="fixed top-24 left-6 z-20 w-[440px] max-h-[calc(100vh-120px)] flex flex-col transition-transform duration-300 ease-in-out"
+      className="fixed top-24 left-3 right-3 w-auto md:left-6 md:right-auto md:w-[440px] z-20 max-h-[calc(100vh-120px)] flex flex-col transition-transform duration-300 ease-in-out"
       style={{
         transform: open ? "translateX(0)" : "translateX(calc(-100% - 24px))",
         backgroundColor: "#E8623A",

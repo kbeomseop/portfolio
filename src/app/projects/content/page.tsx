@@ -37,28 +37,52 @@ const sections: ProjectSection[] = [
           </div>
         </div>
         <div className="mt-8">
-          <div className="flex gap-4 max-w-[720px]">
+          <div className="group flex gap-4 max-w-[720px]">
             {[
-              { src: "/content/reel-pov-instructor.webp", views: "50K views", alt: "Reel: a day in the life of a climbing instructor" },
-              { src: "/content/reel-jonber.webp", views: "25K views", alt: "Reel: coming back to a project after a week off" },
-              { src: "/content/reel-tomoa-step.webp", views: "22K views", alt: "Reel: Tomoa skip technique breakdown" },
-            ].map(({ src, views, alt }) => (
-              <div key={src} className="flex flex-col gap-2">
+              {
+                src: "/content/reel-pov-instructor.webp",
+                views: "50K views",
+                alt: "Reel: a day in the life of a climbing instructor",
+                href: "https://www.instagram.com/reel/DVsREVlAap0/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",
+              },
+              {
+                src: "/content/reel-jonber.webp",
+                views: "25K views",
+                alt: "Reel: coming back to a project after a week off",
+                href: "https://www.instagram.com/reel/DWvTRL4kYRG/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+              },
+              {
+                src: "/content/reel-tomoa-step.webp",
+                views: "22K views",
+                alt: "Reel: Tomoa skip technique breakdown",
+                href: "https://www.instagram.com/reel/DY7LAsthp5G/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+              },
+            ].map(({ src, views, alt, href }) => (
+              <a
+                key={src}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative flex flex-1 flex-col gap-2 no-underline
+                           transition-all duration-300 ease-out
+                           group-hover:opacity-40 group-hover:blur-[2px]
+                           hover:opacity-100! hover:blur-none! hover:scale-[1.2] hover:z-10"
+              >
                 <img
                   src={src}
                   alt={alt}
-                  className="w-[140px] rounded-[10px]"
+                  className="w-full rounded-[10px]"
                   style={{ border: "0.5px solid #eee" }}
                 />
                 <span className="text-[12px] text-[#999]">{views}</span>
-              </div>
+              </a>
             ))}
           </div>
           <a
             href="https://www.instagram.com/peakers_sinchon/reels/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block mt-4 text-[13px] font-medium text-[#A8860B] hover:opacity-70 transition-opacity"
+            className="inline-block mt-6 text-[13px] font-medium text-[#A8860B] hover:opacity-70 transition-opacity"
           >
             More on Instagram →
           </a>

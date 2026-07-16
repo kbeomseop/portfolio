@@ -156,8 +156,8 @@ export default function ContentPage() {
       }
       sections={sections}
       heroTheme={{
-        gradient: "linear-gradient(160deg, #FDFAF0 0%, #FAEFC9 55%, #F5E3A8 100%)",
-        blob: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,160,23,0.16) 0%, transparent 100%)",
+        gradient: "linear-gradient(160deg, #FDFAF0 0%, #FAEFC9 40%, #F5E3A8 100%)",
+        blob: "radial-gradient(ellipse 45% 55% at 20% 10%, rgba(212,160,23,0.30) 0%, transparent 70%), radial-gradient(ellipse 50% 60% at 85% 25%, rgba(239,217,138,0.55) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 55% 95%, rgba(245,227,168,0.65) 0%, transparent 65%)",
         labelColor: "#A8860B",
       }}
     />

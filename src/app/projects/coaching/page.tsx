@@ -162,9 +162,9 @@ export default function CoachingPage() {
       }
       sections={sections}
       heroTheme={{
-        gradient: "linear-gradient(160deg, #FDF6F2 0%, #F9E0D0 55%, #F5CDB4 100%)",
-        blob: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(216,90,48,0.16) 0%, transparent 100%)",
-        labelColor: "#B06845",
+        gradient: "linear-gradient(160deg, #FDF6F2 0%, #F9E0D0 40%, #F5CDB4 100%)",
+        blob: "radial-gradient(ellipse 45% 55% at 20% 10%, rgba(216,90,48,0.38) 0%, transparent 70%), radial-gradient(ellipse 50% 60% at 85% 25%, rgba(240,153,123,0.50) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 55% 95%, rgba(245,196,179,0.65) 0%, transparent 65%)",
+        labelColor: "#993C1D",
       }}
     />
   );

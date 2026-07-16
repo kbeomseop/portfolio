@@ -112,8 +112,8 @@ export default function VibeCoderPage() {
       }
       sections={sections}
       heroTheme={{
-        gradient: "linear-gradient(160deg, #F4F3FB 0%, #E2DFF5 55%, #CFC9EE 100%)",
-        blob: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(93,78,191,0.16) 0%, transparent 100%)",
+        gradient: "linear-gradient(160deg, #F4F3FB 0%, #E2DFF5 40%, #CFC9EE 100%)",
+        blob: "radial-gradient(ellipse 45% 55% at 20% 10%, rgba(93,78,191,0.30) 0%, transparent 70%), radial-gradient(ellipse 50% 60% at 85% 25%, rgba(185,175,230,0.55) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 55% 95%, rgba(207,201,238,0.68) 0%, transparent 65%)",
         labelColor: "#5D4EBF",
       }}
     />

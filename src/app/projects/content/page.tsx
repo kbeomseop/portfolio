@@ -66,7 +66,7 @@ const sections: ProjectSection[] = [
                 className="relative flex flex-1 flex-col gap-2 no-underline
                            transition-all duration-300 ease-out
                            group-hover:opacity-40 group-hover:blur-[2px]
-                           hover:opacity-100! hover:blur-none! hover:scale-[1.2] hover:z-10"
+                           hover:opacity-100! hover:blur-none! hover:scale-[1.1] hover:z-10"
               >
                 <img
                   src={src}
@@ -82,7 +82,7 @@ const sections: ProjectSection[] = [
             href="https://www.instagram.com/peakers_sinchon/reels/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block mt-6 text-[13px] font-medium text-[#A8860B] hover:opacity-70 transition-opacity"
+            className="inline-block mt-10 text-[13px] font-medium text-[#A8860B] hover:opacity-70 transition-opacity"
           >
             More on Instagram →
           </a>

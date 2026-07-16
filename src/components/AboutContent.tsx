@@ -6,14 +6,8 @@ export const experience = [
   {
     period: "2025 – 2026",
     org: "PEAKERS Climbing Sinchon",
-    role: "Climbing coach",
-    desc: "Coaching, event planning, and social media for a bouldering gym.",
-  },
-  {
-    period: "2026 – Now",
-    org: "Independent practice",
-    role: "Vibe coder",
-    desc: "Building web apps, games, and internal tools with AI.",
+    role: "Climbing Coach & Operations",
+    desc: "Coaching, safety inductions, events, and social media for a bouldering gym in Seoul.",
   },
   {
     period: "2018 – 2025",
@@ -21,6 +15,13 @@ export const experience = [
     role: "Intelligence Operator",
     desc: "Planned and coordinated intelligence operations, developing discipline, adaptability, and problem-solving under pressure.",
   },
+];
+
+export const education = [
+  "Certified Climbing Instructor (Level 2) — Korean national qualification",
+  "First Aid Certificate (NZQA-recognised) — Auckland, 2026",
+  "SCA Barista Skills & Brewing",
+  "B.A. English Language & Literature — Kyung Hee Cyber University, 2025",
 ];
 
 export const subheading: CSSProperties = {
@@ -108,6 +109,18 @@ export default function AboutContent() {
             </li>
           ))}
         </ol>
+      </section>
+
+      {/* Education & Certifications */}
+      <section>
+        <h3 style={{ ...subheading, marginBottom: "16px" }}>Education & Certifications</h3>
+        <ul className="space-y-2">
+          {education.map((item) => (
+            <li key={item} style={body}>
+              {item}
+            </li>
+          ))}
+        </ul>
       </section>
 
       <div className="h-2" />

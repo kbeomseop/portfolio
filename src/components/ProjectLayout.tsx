@@ -63,9 +63,9 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
       {/* ── Hero ── */}
       <section
+        className="min-h-[420px] md:min-h-[560px]"
         style={{
           width: "100%",
-          minHeight: 560,
           position: "relative",
           overflow: "hidden",
           display: "flex",
@@ -89,11 +89,9 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
         {/* Back link */}
         <Link
           href="/"
-          className="hover:text-[#444] transition-colors"
+          className="hover:text-[#444] transition-colors top-6 left-5 md:top-8 md:left-12"
           style={{
             position: "absolute",
-            top: 32,
-            left: 48,
             zIndex: 10,
             fontSize: 13,
             color: "#999",
@@ -120,9 +118,9 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
         {/* Title */}
         <h1
+          className="text-[32px] md:text-[52px] px-5"
           style={{
             textAlign: "center",
-            fontSize: 52,
             fontWeight: 700,
             lineHeight: 1.2,
             color: "#1a1a1a",
@@ -135,11 +133,10 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
         {/* Hero image */}
         <div
+          className="w-[calc(100%-40px)] max-w-[720px] h-[240px] md:h-[400px]"
           style={{
             marginTop: 48,
             zIndex: 1,
-            width: 720,
-            height: 400,
             borderRadius: "20px 20px 0 0",
             overflow: "hidden",
             boxShadow: "0 24px 60px rgba(0,0,0,0.18)",
@@ -164,7 +161,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
           {/* Sidebar */}
           <aside
-            className="w-[200px] shrink-0 flex flex-col pt-10 pb-8"
+            className="hidden md:flex w-[200px] shrink-0 flex-col pt-10 pb-8"
             style={{
               borderRight: "0.5px solid #EEEEEE",
               position: "sticky",
@@ -206,7 +203,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
           {/* Content */}
           <main className="flex-1">
-            <div className="px-16 pt-16 pb-12">
+            <div className="px-5 pt-10 pb-8 md:px-16 md:pt-16 md:pb-12">
               <div className="space-y-20">
                 {sections.map((section) => (
                   <section key={section.id} id={section.id}>

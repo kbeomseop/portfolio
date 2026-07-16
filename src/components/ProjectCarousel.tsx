@@ -46,7 +46,8 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
       const card = cardRefs.current[i];
       const container = containerRef.current;
       if (!card || !container) return;
-      container.scrollTo({ left: card.offsetLeft - 96, behavior: "smooth" });
+      const offset = window.innerWidth < 768 ? 16 : 96;
+      container.scrollTo({ left: card.offsetLeft - offset, behavior: "smooth" });
     },
   }));
 
@@ -95,7 +96,7 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
   return (
     <div
       ref={containerRef}
-      className="scrollbar-hide"
+      className="scrollbar-hide gap-6 md:gap-14 px-4 md:px-10"
       style={{
         position: "fixed",
         left: 0,
@@ -106,17 +107,15 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
         overflowY: "hidden",
         display: "flex",
         alignItems: "center",
-        gap: 56,
-        padding: "0 40px",
         zIndex: 20,
       }}
     >
       {/* About card */}
       <div
         ref={(el) => { cardRefs.current[0] = el; }}
+        className="w-[calc(100vw-48px)] md:w-[440px]"
         style={{
           flexShrink: 0,
-          width: 440,
           height: CARD_H,
           borderRadius: 20,
           backgroundColor: "#E8623A",
@@ -145,10 +144,9 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
           key={card.key}
           href={card.href}
           ref={(el) => { cardRefs.current[i + 1] = el as HTMLElement | null; }}
-          className="hover:-translate-y-[6px] transition-[transform] duration-[250ms] ease-out"
+          className="hover:-translate-y-[6px] transition-[transform] duration-[250ms] ease-out w-[calc(100vw-48px)] md:w-[1350px]"
           style={{
             flexShrink: 0,
-            width: 1350,
             height: CARD_H,
             borderRadius: 24,
             overflow: "hidden",
@@ -160,21 +158,20 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
           }}
         >
           {/* Header */}
-          <div style={{ padding: "48px 48px 0", flexShrink: 0 }}>
+          <div className="pt-7 px-6 md:pt-12 md:px-12" style={{ flexShrink: 0 }}>
             <p style={{
               fontSize: 13, fontWeight: 600, letterSpacing: "1.5px",
               textTransform: "uppercase", color: "rgba(0,0,0,0.45)",
             }}>
               {card.label}
             </p>
-            <h3 style={{ fontSize: 40, fontWeight: 700, color: "#1a1a1a", marginTop: 8 }}>
+            <h3 className="text-[26px] md:text-[40px]" style={{ fontWeight: 700, color: "#1a1a1a", marginTop: 8 }}>
               {card.title}
             </h3>
           </div>
           {/* Preview placeholder — fills remaining card height, clipped by overflow:hidden */}
-          <div style={{
+          <div className="mt-5 mx-6 md:mt-8 md:mx-12" style={{
             flex: 1,
-            margin: "32px 48px 0",
             borderRadius: "16px 16px 0 0",
             background: "rgba(255,255,255,0.5)",
             border: "1px solid rgba(255,255,255,0.7)",
@@ -190,9 +187,9 @@ const ProjectCarousel = forwardRef<CarouselHandle, Props>(({ onActiveChange }, r
       {/* Contact card */}
       <div
         ref={(el) => { cardRefs.current[4] = el; }}
+        className="w-[calc(100vw-48px)] md:w-[400px]"
         style={{
           flexShrink: 0,
-          width: 400,
           height: CARD_H,
           borderRadius: 20,
           backgroundColor: "#1A1A1A",

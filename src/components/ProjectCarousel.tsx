@@ -25,11 +25,11 @@ const projectCards = [
     href: "/projects/content",
   },
   {
-    key: "coding",
-    label: "Vibe coding",
-    title: "Vibe coder",
+    key: "community",
+    label: "Community",
+    title: "Community builder",
     gradient: "linear-gradient(160deg, #E2DFF5 0%, #B9AFE6 100%)",
-    href: "/projects/vibe-coder",
+    href: "/projects/community",
   },
 ];
 

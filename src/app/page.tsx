@@ -7,7 +7,7 @@ import ContactPanel from "@/components/ContactPanel";
 import HeroGrid from "@/components/HeroGrid";
 import ProjectCarousel, { type CarouselHandle } from "@/components/ProjectCarousel";
 
-const CAROUSEL_LABELS = ["About", "Coaching", "Content", "Vibe coding", "Contact"];
+const CAROUSEL_LABELS = ["About", "Coaching", "Content", "Community", "Contact"];
 
 const STATUS_TEXT = "Moving to Auckland — September 2026 · Working Holiday Visa · Open to climbing gym roles";
 // 오클랜드 도착 후 아래로 교체:
@@ -160,14 +160,14 @@ export default function Home() {
               Content creator.
             </Link>
             <Link
-              href="/projects/vibe-coder"
+              href="/projects/community"
               className="block text-[#444] hover:text-[#D85A30] transition-colors cursor-pointer no-underline w-fit"
             >
-              Vibe coder.
+              Community builder.
             </Link>
           </h1>
           <p className="mt-6 text-[16px] leading-[1.65] text-[#555] md:whitespace-nowrap">
-            Currently coaching, creating, and coding — mostly in that order.
+            Currently coaching, creating, and building community — mostly in that order.
           </p>
         </main>
       )}

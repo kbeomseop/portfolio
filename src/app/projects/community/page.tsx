@@ -46,6 +46,27 @@ const sections: ProjectSection[] = [
             <p className="text-[13px] text-[#999] mt-2">unique crews after filtering duplicates</p>
           </div>
         </div>
+        <div className="mt-6">
+          <video
+            src="/content/reel-loop-muted.mp4"
+            poster="/content/reel-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-[240px] md:w-[280px] rounded-[12px]"
+            style={{ border: "0.5px solid #eee" }}
+            aria-label="신촌 빌려드림 — the night the gym was lent out"
+          />
+        </div>
+        <a
+          href="https://www.instagram.com/reel/DZ4fUsaBK_g/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mt-5 text-[13px] font-medium text-[#5D4EBF] hover:opacity-70 transition-opacity"
+        >
+          Watch the reel →
+        </a>
       </div>
     ),
   },
@@ -60,19 +81,6 @@ const sections: ProjectSection[] = [
           Night turned regular session hours into something people planned their
           week around.
         </p>
-        <div className="mt-6">
-          <video
-            src="/content/reel-loop-muted.mp4"
-            poster="/content/reel-poster.jpg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-[240px] md:w-[280px] rounded-[12px]"
-            style={{ border: "0.5px solid #eee" }}
-            aria-label="PEAKERS Night — bouldering under colored lights after dark"
-          />
-        </div>
       </div>
     ),
   },

@@ -23,17 +23,27 @@ const sections: ProjectSection[] = [
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Growth</h2>
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
-          Reach had been declining before I took over. Within three weeks, weekly reach
-          hit an all-time high — and one reel outperformed everything posted before or since.
+          When I took over in March, the account was averaging around 120K views a
+          month. Five months on it&apos;s holding at 165K, and it peaked at 238K — the
+          highest the account has ever recorded.
         </p>
-        <div className="mt-8 flex gap-12">
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px] mt-4">
+          That record landed six days after a reel I posted in my second week: 50K
+          views, 229 shares, and 89% of the reach going to people who weren&apos;t
+          following us yet.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-x-10 gap-y-6 max-w-[720px]">
           <div>
-            <p className="text-[40px] font-bold text-[#D85A30] leading-none">+50%</p>
-            <p className="text-[13px] text-[#999] mt-2">Instagram growth since taking over in March 2026</p>
+            <p className="text-[40px] font-bold text-[#D85A30] leading-none">+33%</p>
+            <p className="text-[13px] text-[#999] mt-2">monthly views, sustained since March 2026 (120K → 165K)</p>
           </div>
           <div>
-            <p className="text-[40px] font-bold text-[#D85A30] leading-none">50K</p>
-            <p className="text-[13px] text-[#999] mt-2">best-performing reel</p>
+            <p className="text-[40px] font-bold text-[#D85A30] leading-none">238K</p>
+            <p className="text-[13px] text-[#999] mt-2">all-time account record</p>
+          </div>
+          <div>
+            <p className="text-[40px] font-bold text-[#D85A30] leading-none">89%</p>
+            <p className="text-[13px] text-[#999] mt-2">of the top reel&apos;s reach — non-followers</p>
           </div>
         </div>
         <div className="mt-8">
@@ -97,10 +107,16 @@ const sections: ProjectSection[] = [
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">From shoot to post</h2>
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
-          Every reel starts as a phone clip and ends up cut, captioned, and color-graded
-          in CapCut or Canva — usually the same day it&apos;s filmed. No outsourcing, no
-          waiting on a designer. Same goes for graphics — event posters and promo
-          visuals are mine too, start to finish.
+          Every reel starts as a phone clip and ends up cut, captioned, and
+          color-graded in CapCut or Canva — usually the same day it&apos;s filmed. No
+          outsourcing, no waiting on a designer. Same goes for graphics — event posters
+          and promo visuals are mine too, start to finish. 25+ reels in five months, at
+          least one a week.
+        </p>
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px] mt-4">
+          Most of them meant getting coaches and members in front of a camera they
+          hadn&apos;t asked to be in front of, and working around everyone&apos;s
+          shifts to do it. The editing was rarely the hard part.
         </p>
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[720px]">
           <div className="flex flex-col gap-2">
@@ -132,13 +148,34 @@ const sections: ProjectSection[] = [
       <div>
         <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Going local</h2>
         <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
-          Figured out who was actually around — turns out that&apos;s a lot of university
-          students. So instead of casting a wide net, I built student discount passes and
-          pushed them through Reels aimed squarely at people walking past the gym every
-          day. Three campaigns in, the playbook keeps getting sharper — the latest, a
-          five-session student pass, runs with promotion support from nearby university
-          student councils.
+          The account&apos;s audience skewed 25–34. The neighborhood didn&apos;t. The
+          gym sits in one of Seoul&apos;s densest university districts, and most of the
+          people walking past it were students — the group that, once they settle into
+          a gym, tends to stay.
         </p>
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px] mt-4">
+          So I went to them. Across three campaigns I reached out to nearby
+          universities and their student bodies, alpine clubs and climbing societies,
+          and ran student discounts through their channels alongside our own Reels.
+          Timed to the semester, the biggest of them brought in 626 visits over three
+          months against a 500 target. The latest turned that traffic into something
+          that paid for itself: a five-session student pass, sold at the counter — 56
+          went out, and five students came back for a second.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-x-10 gap-y-6 max-w-[720px]">
+          <div>
+            <p className="text-[40px] font-bold text-[#D85A30] leading-none">8</p>
+            <p className="text-[13px] text-[#999] mt-2">universities contacted</p>
+          </div>
+          <div>
+            <p className="text-[40px] font-bold text-[#D85A30] leading-none">11</p>
+            <p className="text-[13px] text-[#999] mt-2">student bodies, alpine and climbing clubs</p>
+          </div>
+          <div>
+            <p className="text-[40px] font-bold text-[#D85A30] leading-none">626</p>
+            <p className="text-[13px] text-[#999] mt-2">visits in one semester (target: 500)</p>
+          </div>
+        </div>
       </div>
     ),
   },

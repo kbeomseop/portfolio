@@ -32,10 +32,10 @@ const sections: ProjectSection[] = [
           views, 229 shares, and 89% of the reach going to people who weren&apos;t
           following us yet.
         </p>
-        <div className="mt-8 flex flex-wrap gap-x-10 gap-y-6 max-w-[720px]">
+        <div className="mt-8 grid grid-cols-3 gap-6 max-w-[720px]">
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">+33%</p>
-            <p className="text-[13px] text-[#999] mt-2">monthly views, sustained since March 2026 (120K → 165K)</p>
+            <p className="text-[13px] text-[#999] mt-2">monthly views, sustained</p>
           </div>
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">238K</p>
@@ -43,7 +43,7 @@ const sections: ProjectSection[] = [
           </div>
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">89%</p>
-            <p className="text-[13px] text-[#999] mt-2">of the top reel&apos;s reach — non-followers</p>
+            <p className="text-[13px] text-[#999] mt-2">top reel reach — non-followers</p>
           </div>
         </div>
         <div className="mt-8">
@@ -162,14 +162,14 @@ const sections: ProjectSection[] = [
           that paid for itself: a five-session student pass, sold at the counter — 56
           went out, and five students came back for a second.
         </p>
-        <div className="mt-8 flex flex-wrap gap-x-10 gap-y-6 max-w-[720px]">
+        <div className="mt-8 grid grid-cols-3 gap-6 max-w-[720px]">
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">8</p>
             <p className="text-[13px] text-[#999] mt-2">universities contacted</p>
           </div>
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">11</p>
-            <p className="text-[13px] text-[#999] mt-2">student bodies, alpine and climbing clubs</p>
+            <p className="text-[13px] text-[#999] mt-2">student bodies and clubs</p>
           </div>
           <div>
             <p className="text-[40px] font-bold text-[#D85A30] leading-none">626</p>

@@ -84,6 +84,68 @@ const sections: ProjectSection[] = [
       </div>
     ),
   },
+  {
+    id: "guiding-blind-climbers",
+    label: "Guiding blind climbers",
+    content: (
+      <div>
+        <h2 className="text-[20px] font-bold text-[#1a1a1a] mb-4">Guiding blind climbers</h2>
+        <div className="space-y-4">
+          <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
+            Twice a month for about six months, I volunteered at Boramae Climbing
+            Center — a city-run outdoor lead wall in Seoul — with a group of blind
+            and low-vision climbers. I wanted to do something for the climbing
+            community beyond the gym I coach at.
+          </p>
+          <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
+            Sessions ran anywhere from five climbers to twenty. I fitted harnesses
+            and shoes, spotted the opening moves, and belayed — which on a lead wall
+            is the whole safety system, not a formality.
+          </p>
+          <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px]">
+            Most of the job, though, was my voice. Fifteen metres up a lead route,
+            nobody can reach a climber — I&apos;m on the ground with the other end
+            of the rope. So we built the vocabulary before anyone tied in: jug,
+            pinch, crimp, and a clock face for direction. After that, &ldquo;right
+            hand, one o&apos;clock, jug&rdquo; was enough to keep someone moving.
+          </p>
+        </div>
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[720px]">
+          <div className="flex flex-col gap-2">
+            <img
+              src="/content/boramae-belay.webp"
+              alt="Belaying at the foot of the Boramae lead wall, rope running through the belay device"
+              className="w-full rounded-[10px]"
+              style={{ border: "0.5px solid #eee" }}
+            />
+            <span className="text-[12px] text-[#999]">On belay at the base of the wall</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            <img
+              src="/content/boramae-lead.webp"
+              alt="A climber partway up the lead wall while two volunteers belay and watch from the ground"
+              className="w-full rounded-[10px]"
+              style={{ border: "0.5px solid #eee" }}
+            />
+            <span className="text-[12px] text-[#999]">Calling a route from the ground</span>
+          </div>
+        </div>
+        <p className="text-[15px] leading-[1.7] text-[#555] max-w-[720px] mt-6">
+          One climber was fighting through 5.9 when I started. By the end, I was
+          belaying him up a clean 5.10c. Best thing I took home from any of it.
+        </p>
+        <div className="mt-6 flex flex-col gap-2 max-w-[720px]">
+          <img
+            src="/content/boramae-group.webp"
+            alt="Climbers and volunteers together in front of the Boramae wall at the end of a session"
+            className="w-full rounded-[10px]"
+            style={{ border: "0.5px solid #eee" }}
+          />
+          <span className="text-[12px] text-[#999]">End of a session at Boramae</span>
+        </div>
+      </div>
+    ),
+  },
 ];
 
 export default function CommunityPage() {

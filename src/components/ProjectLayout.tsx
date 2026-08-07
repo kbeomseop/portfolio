@@ -63,7 +63,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
       {/* ── Hero ── */}
       <section
-        className="min-h-[100dvh]"
+        className="min-h-[90dvh]"
         style={{
           width: "100%",
           position: "relative",
@@ -74,6 +74,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
           paddingTop: 64,
           paddingBottom: 0,
           background: heroTheme.gradient,
+          borderRadius: "0 0 24px 24px",
         }}
       >
         {/* Radial glow */}

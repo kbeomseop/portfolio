@@ -28,6 +28,11 @@ interface Props {
 export default function ProjectLayout({ categoryLabel, title, sections, heroImage, heroBackground, heroTheme }: Props) {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? "");
 
+  // Over a photo the text carries its own contrast instead of dimming the image
+  const heroTextShadow = heroBackground
+    ? "0 1px 3px rgba(0,0,0,0.55), 0 4px 18px rgba(0,0,0,0.45)"
+    : undefined;
+
   // Section highlight via IntersectionObserver (viewport-based)
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -81,17 +86,17 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
           borderRadius: "0 0 24px 24px",
         }}
       >
-        {/* Radial glow, or a scrim to keep text legible over a photo */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            pointerEvents: "none",
-            background: heroBackground
-              ? "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.28) 40%, rgba(0,0,0,0.20) 100%)"
-              : heroTheme.blob,
-          }}
-        />
+        {/* Radial glow — only for the gradient hero; a photo hero stays unshaded */}
+        {!heroBackground && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              pointerEvents: "none",
+              background: heroTheme.blob,
+            }}
+          />
+        )}
 
         {/* Back link */}
         <Link
@@ -101,8 +106,9 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
             position: "absolute",
             zIndex: 10,
             fontSize: 13,
-            color: heroBackground ? "rgba(255,255,255,0.85)" : "#999",
+            color: heroBackground ? "#fff" : "#999",
             textDecoration: "none",
+            textShadow: heroTextShadow,
           }}
         >
           ← Back
@@ -112,12 +118,13 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
         <p
           style={{
             fontSize: 13,
-            color: heroBackground ? "rgba(255,255,255,0.9)" : heroTheme.labelColor,
+            color: heroBackground ? "#fff" : heroTheme.labelColor,
             letterSpacing: "1.5px",
             textTransform: "uppercase",
             fontWeight: 600,
             marginBottom: 12,
             zIndex: 1,
+            textShadow: heroTextShadow,
           }}
         >
           {categoryLabel}
@@ -133,6 +140,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
             color: heroBackground ? "#fff" : "#1a1a1a",
             maxWidth: 760,
             zIndex: 1,
+            textShadow: heroTextShadow,
           }}
         >
           {title}

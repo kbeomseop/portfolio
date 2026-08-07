@@ -63,7 +63,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
       {/* ── Hero ── */}
       <section
-        className="min-h-[420px] md:min-h-[560px]"
+        className="min-h-[100dvh]"
         style={{
           width: "100%",
           position: "relative",
@@ -133,7 +133,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
 
         {/* Hero image */}
         <div
-          className="w-[calc(100%-40px)] max-w-[720px] h-[240px] md:h-[400px]"
+          className="w-[calc(100%-40px)] max-w-[720px] flex-1 min-h-[200px]"
           style={{
             marginTop: 48,
             zIndex: 1,

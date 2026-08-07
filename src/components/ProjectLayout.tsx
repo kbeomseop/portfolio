@@ -20,10 +20,12 @@ interface Props {
   title: React.ReactNode;
   sections: ProjectSection[];
   heroImage?: string;
+  /** Full-bleed hero photo — replaces the gradient and the inset hero image box */
+  heroBackground?: string;
   heroTheme: HeroTheme;
 }
 
-export default function ProjectLayout({ categoryLabel, title, sections, heroImage, heroTheme }: Props) {
+export default function ProjectLayout({ categoryLabel, title, sections, heroImage, heroBackground, heroTheme }: Props) {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? "");
 
   // Section highlight via IntersectionObserver (viewport-based)
@@ -73,17 +75,21 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
           alignItems: "center",
           paddingTop: 64,
           paddingBottom: 0,
-          background: heroTheme.gradient,
+          background: heroBackground
+            ? `url(${heroBackground}) center / cover no-repeat`
+            : heroTheme.gradient,
           borderRadius: "0 0 24px 24px",
         }}
       >
-        {/* Radial glow */}
+        {/* Radial glow, or a scrim to keep text legible over a photo */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             pointerEvents: "none",
-            background: heroTheme.blob,
+            background: heroBackground
+              ? "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.28) 40%, rgba(0,0,0,0.20) 100%)"
+              : heroTheme.blob,
           }}
         />
 
@@ -95,7 +101,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
             position: "absolute",
             zIndex: 10,
             fontSize: 13,
-            color: "#999",
+            color: heroBackground ? "rgba(255,255,255,0.85)" : "#999",
             textDecoration: "none",
           }}
         >
@@ -106,7 +112,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
         <p
           style={{
             fontSize: 13,
-            color: heroTheme.labelColor,
+            color: heroBackground ? "rgba(255,255,255,0.9)" : heroTheme.labelColor,
             letterSpacing: "1.5px",
             textTransform: "uppercase",
             fontWeight: 600,
@@ -124,7 +130,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
             textAlign: "center",
             fontWeight: 700,
             lineHeight: 1.2,
-            color: "#1a1a1a",
+            color: heroBackground ? "#fff" : "#1a1a1a",
             maxWidth: 760,
             zIndex: 1,
           }}
@@ -132,7 +138,8 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
           {title}
         </h1>
 
-        {/* Hero image */}
+        {/* Hero image — omitted when the photo already fills the hero */}
+        {!heroBackground && (
         <div
           className="w-[calc(100%-40px)] max-w-[720px] flex-1 min-h-[200px]"
           style={{
@@ -154,6 +161,7 @@ export default function ProjectLayout({ categoryLabel, title, sections, heroImag
             <span style={{ fontSize: 13, color: "#bbb" }}>[ hero image ]</span>
           )}
         </div>
+        )}
       </section>
 
       {/* ── Sidebar + Content ── */}
